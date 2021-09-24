@@ -32,6 +32,43 @@ impl Tuple {
     pub fn zero_vector() -> Self {
         Self::new(0.0, 0.0, 0.0, 0.0)
     }
+
+    pub fn magnitude(self) -> f32 {
+        (self.x.powi(2) + self.y.powi(2) + self.z.powi(2)).sqrt()
+    }
+
+    pub fn normalize(self) -> Self {
+        Self {
+            x: self.x / self.magnitude(),
+            y: self.y / self.magnitude(),
+            z: self.z / self.magnitude(),
+            w: self.w / self.magnitude(),
+        }
+    }
+
+    pub fn mut_normalize(&mut self){
+            let magnitude = self.magnitude();
+            self.x = self.x / magnitude;
+            self.y = self.y / magnitude;
+            self.z = self.z / magnitude;
+            self.w = self.w / magnitude;
+    }
+
+    pub fn dot(&self, other: &Tuple) -> f32 {
+        self.x * other.x +
+        self.y * other.y +
+        self.z * other.z +
+        self.w * other.w 
+    }
+
+    pub fn cross(&self, other: &Self) -> Tuple {
+        Self {
+            x: (self.y * other.z) - (self.z * other.y),
+            y: (self.z * other.x) - (self.x * other.z),
+            z: (self.x * other.y) - (self.y * other.x),
+            w: 0.0,
+        }
+    }
 }
 
 impl Add <Tuple> for Tuple {

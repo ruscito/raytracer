@@ -1,4 +1,4 @@
-use raytracer::tuple::*;
+use raytracer::{f32eq, tuple::*};
 
 #[test]
 fn tuple_is_a_point() {
@@ -81,3 +81,51 @@ fn div_tuple_by_scalar(){
     let a = Tuple::new(1.0, -2.0, 3.0, -4.0);
     assert_eq!(a / 2.0, Tuple::new(0.5, -1.0, 1.5, -2.0));
 }
+
+#[test]
+fn computing_magnitude(){
+    let v = Tuple::vector(1.0, 0.0, 0.0);
+    assert_eq!(v.magnitude(), 1.0);
+    let v = Tuple::vector(0.0, 1.0, 0.0);
+    assert_eq!(v.magnitude(), 1.0);
+    let v = Tuple::vector(0.0, 0.0, 1.0);
+    assert_eq!(v.magnitude(), 1.0);
+    let v = Tuple::vector(1.0, 2.0, 3.0);
+    assert_eq!(v.magnitude(), 14f32.sqrt());
+    let v = Tuple::vector(-1.0, -2.0, -3.0);
+    assert_eq!(v.magnitude(), 14f32.sqrt());
+}
+
+#[test]
+fn normalizing_vector() {
+    let v = Tuple::vector(4.0, 0.0, 0.0);
+    assert_eq!(v.normalize(), Tuple::vector(1.0, 0.0, 0.0));
+    let v = Tuple::vector(1.0, 2.0, 3.0).normalize();
+    assert!(f32eq(v.x, 0.26726));
+    assert!(f32eq(v.y, 0.53452));
+    assert!(f32eq(v.z, 0.80178));
+   
+    let mut v = Tuple::vector(1.0, 2.0, 3.0);
+    v.mut_normalize();
+    assert!(f32eq(v.x, 0.26726));
+    assert!(f32eq(v.y, 0.53452));
+    assert!(f32eq(v.z, 0.80178));
+}
+
+#[test]
+fn dot_product_of_tuples() {
+    let a = Tuple::vector(1.0, 2.0, 3.0);
+    let b = Tuple::vector(2.0, 3.0, 4.0);
+    assert_eq!(a.dot(&b), 20.0 );
+}
+
+#[test]
+fn cross_product_of_tuples() {
+    let a = Tuple::vector(1.0, 2.0, 3.0);
+    let b = Tuple::vector(2.0, 3.0, 4.0);
+    assert_eq!(a.cross(&b), Tuple::vector(-1.0, 2.0, -1.0));
+    assert_eq!(b.cross(&a), Tuple::vector(1.0, -2.0, 1.0));
+}
+
+
+
