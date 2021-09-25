@@ -1,6 +1,6 @@
 use std::ops::{Add, Div, Mul, Neg, Sub};
 
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Clone, Copy)]
 pub struct Tuple {
     pub x: f32,
     pub y: f32,
@@ -68,6 +68,15 @@ impl Tuple {
             z: (self.x * other.y) - (self.y * other.x),
             w: 0.0,
         }
+    }
+}
+
+impl PartialEq for Tuple {
+    fn eq (&self, other: &Tuple) -> bool {
+        super::f32eq(self.x, other.x) &&
+        super::f32eq(self.y, other.y) &&
+        super::f32eq(self.z, other.z) &&
+        super::f32eq(self.w, other.w)
     }
 }
 
