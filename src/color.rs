@@ -1,7 +1,15 @@
 use std::ops::{Add, Mul, Sub};
 use std::convert::From;
-
 use crate::f32_to_u8;
+
+pub const BLACK: (u8, u8, u8) = (0, 0, 0);
+pub const WHITE: (u8, u8, u8) = (255, 255, 255);
+pub const RED: (u8, u8, u8) = (255, 0, 0);
+pub const GREEN: (u8, u8, u8) = (0, 255, 0);
+pub const BLUE: (u8, u8, u8) = (0, 0, 255);
+pub const YELLOW: (u8, u8, u8) = (255, 255, 0);
+pub const MAGENTA: (u8, u8, u8) = (255, 0, 255);
+pub const CYAN: (u8, u8, u8) = (0, 255, 255);
 
 #[derive(Debug, Clone, Copy)]
 pub struct Color {
@@ -15,22 +23,21 @@ impl Color {
         Self {r, g, b}
     }  
 
+    pub fn black() -> Self {
+        Self { r:0.0, g:0.0, b:0.0}
+    }
+
     pub fn to_bytes(&self) -> (u8, u8, u8) {
         (f32_to_u8(self.r), f32_to_u8(self.g), f32_to_u8(self.b))
     }
 }
+
 
 impl PartialEq for Color {
     fn eq(&self, rhs: &Color) -> bool {
         super::f32eq(self.r, rhs.r) &&
         super::f32eq(self.g, rhs.g) &&
         super::f32eq(self.b, rhs.b) 
-    }
-}
-
-impl From <Color> for (u8, u8, u8) {
-    fn from (c: Color) -> (u8, u8, u8) {
-        (f32_to_u8(c.r), f32_to_u8(c.g), f32_to_u8(c.b))
     }
 }
 
@@ -43,7 +50,6 @@ impl From <(u8, u8, u8)> for Color {
         }
     }
 }
-
 
 impl Add<Color> for Color   {
     type Output = Self;
