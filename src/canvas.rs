@@ -1,4 +1,4 @@
-use std::{ops::{Index, IndexMut}};
+use std::{cmp::min, ops::{Index, IndexMut}};
 
 
 use crate::color::Color;
@@ -44,7 +44,7 @@ impl Canvas {
         }
         out
     }
-
+    
     pub fn save(&self, file_name:&str) -> Result<(), String> {
         match image::save_buffer(
             file_name,
@@ -55,20 +55,116 @@ impl Canvas {
                 Err(_) => Err(String::from("Error saving the canvas"))
             }
     }
+
+    fn _x_bound_check(&mut self, x:usize) -> usize {
+        min(self.width - 1, x)        
+    }
 }
 
 // https://stackoverflow.com/questions/33770989/implementing-the-index-operator-for-matrices-with-multiple-parameters
 impl Index<[usize; 2]> for  Canvas {
     type Output = Color;
     fn index(&self, idx:[usize; 2]) -> &Self::Output {
-        &self.pixels[(idx[1] * self.width) + idx[0]]
+        let mut y = self.height - idx[1];
+        let x = min(self.width - 1, idx[0]); 
+        y = min(self.height - 1, y); 
+        &self.pixels[(y * self.width) + x]
     }    
 }
 
 impl IndexMut<[usize; 2]> for  Canvas {
     fn index_mut(&mut self, idx:[usize; 2]) -> &mut Self::Output {
-        &mut self.pixels[(idx[1] * self.width) + idx[0]]
+        let mut y = self.height - idx[1];
+        let x = min(self.width - 1, idx[0]); 
+        y = min(self.height - 1, y); 
+        &mut self.pixels[(y * self.width) + x]
     }    
 }
 
+
+impl Index<[f64; 2]> for  Canvas {
+    type Output = Color;
+    fn index(&self, idx:[f64; 2]) -> &Self::Output {
+        let x:usize;
+        let y:usize;
+
+        if idx[0] < 0.0 {
+            x = 0;
+        } else {
+            x = idx[0] as usize
+        }
+
+        if idx[1] < 0.0 {
+            y = 0;
+        } else {
+            y = idx[1] as usize
+        }
+        
+        &self[[x, y]]
+    }    
+}
+
+impl IndexMut<[f64; 2]> for  Canvas {
+    fn index_mut(&mut self, idx:[f64; 2]) -> &mut Self::Output {
+        let x:usize;
+        let y:usize;
+
+        if idx[0] < 0.0 {
+            x = 0;
+        } else {
+            x = idx[0] as usize
+        }
+
+        if idx[1] < 0.0 {
+            y = 0;
+        } else {
+            y = idx[1] as usize
+        }
+        
+        &mut self[[x, y]]
+    }    
+}
+
+impl Index<[f32; 2]> for  Canvas {
+    type Output = Color;
+    fn index(&self, idx:[f32; 2]) -> &Self::Output {
+        let x:usize;
+        let y:usize;
+
+        if idx[0] < 0.0 {
+            x = 0;
+        } else {
+            x = idx[0] as usize
+        }
+
+        if idx[1] < 0.0 {
+            y = 0;
+        } else {
+            y = idx[1] as usize
+        }
+        
+        &self[[x, y]]
+    }    
+}
+
+impl IndexMut<[f32; 2]> for  Canvas {
+    fn index_mut(&mut self, idx:[f32; 2]) -> &mut Self::Output {
+        let x:usize;
+        let y:usize;
+
+        if idx[0] < 0.0 {
+            x = 0;
+        } else {
+            x = idx[0] as usize
+        }
+
+        if idx[1] < 0.0 {
+            y = 0;
+        } else {
+            y = idx[1] as usize
+        }
+        
+        &mut self[[x, y]]
+    }    
+}
 

@@ -2,14 +2,14 @@ use std::ops::{Add, Mul, Sub};
 use std::convert::From;
 use crate::f32_to_u8;
 
-pub const BLACK: (u8, u8, u8) = (0, 0, 0);
-pub const WHITE: (u8, u8, u8) = (255, 255, 255);
-pub const RED: (u8, u8, u8) = (255, 0, 0);
-pub const GREEN: (u8, u8, u8) = (0, 255, 0);
-pub const BLUE: (u8, u8, u8) = (0, 0, 255);
-pub const YELLOW: (u8, u8, u8) = (255, 255, 0);
-pub const MAGENTA: (u8, u8, u8) = (255, 0, 255);
-pub const CYAN: (u8, u8, u8) = (0, 255, 255);
+pub const BLACK: Color = Color{r:0.0, g:0.0, b:0.0};
+pub const WHITE: Color = Color{r:1.0, g:1.0, b:1.0};
+pub const RED: Color = Color{r:1.0, g:0.0, b:0.0};
+pub const GREEN: Color = Color{r:0.0, g:1.0, b:0.0};
+pub const BLUE: Color = Color{r:0.0, g:0.0, b:1.0};
+pub const YELLOW: Color = Color{r:1.0, g:1.0, b:0.0};
+pub const MAGENTA: Color = Color{r:1.0, g:0.0, b:1.0};
+pub const CYAN: Color = Color{r:0.0, g:1.0, b:1.0};
 
 #[derive(Debug, Clone, Copy)]
 pub struct Color {

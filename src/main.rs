@@ -1,4 +1,4 @@
-use raytracer::tuple::Tuple;
+use raytracer::{canvas::Canvas, color::{BLUE, YELLOW}, tuple::Tuple};
 
 
 #[derive(Debug)]
@@ -20,22 +20,28 @@ fn tick(env: &Environment, proj: Projectile) -> Projectile {
 }
 
 
-fn main() {
-    println!("raytracer");
-    let  mut projectile = Projectile { 
+fn demo(){
+    let mut p = Projectile{ 
         position: Tuple::point(0.0, 1.0, 0.0),
-        velocity: Tuple::vector(1.0, 1.0, 0.0).normalize(),
+        velocity: Tuple::vector(1.0, 1.8, 0.0).normalize() * 11.65,
     };
-
-    let environment = Environment {
+    
+    let e = Environment {
         gravity: Tuple::vector(0.0, -0.1, 0.0),
         wind: Tuple::vector(-0.01, 0.0, 0.0),
     };
-
-    let mut i = 0;
-    while projectile.position.y > 0.0 {
-        projectile = tick(&environment, projectile);
-        i = i + 1;
-        println!("{} {:?}", i, projectile.position)
+    
+    let mut cv= Canvas::new(950, 550);
+    cv.backgound(YELLOW);    
+    
+    while p.position.y > 0.0 {
+        p  = tick(&e, p);
+        cv[[p.position.x, p.position.y]] = BLUE;
     }
+
+    cv.save("test.png").unwrap();
+
+}
+fn main() {
+    demo();
 }
