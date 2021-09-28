@@ -1,27 +1,23 @@
 use core::panic;
-use std::ops::{Index, IndexMut};
+use std::ops::{Index, IndexMut, Mul};
 
 const SIZE: usize = 4;
 
 #[derive(Debug, Clone)]
 pub struct Mat4 {
-    buffer: Vec<f32>,
+    buffer: [f32; SIZE*SIZE],
 }
 
 impl Mat4 {
     pub fn new() -> Self {
         Self {
-            buffer: vec![0.0; SIZE*SIZE],
+            buffer:[0.0; SIZE*SIZE],
         }
     }
 
 
-    pub fn from_buffer(buffer: &[f32]) -> Result<Self, String> {
-        if SIZE * SIZE == buffer.len() {
-            Ok(Self { buffer: buffer.into()})
-        } else {
-            Err("Matrix - Error creating matrix: buffer size mistmatchd ".into())
-        }
+    pub fn from_buffer(buffer: &[f32;SIZE*SIZE]) -> Self {
+        Self { buffer: *buffer}
     }   
     
     pub fn size(&self) -> usize {
@@ -43,7 +39,6 @@ impl PartialEq for Mat4 {
     }
 }
 
-
 impl Index<(usize, usize)> for  Mat4 {
     type Output = f32;
     fn index(&self, (x, y):(usize, usize)) -> &Self::Output {
@@ -61,6 +56,22 @@ impl IndexMut<(usize, usize)> for Mat4 {
         } 
         &mut self.buffer[y*SIZE +x]
     }    
+}
+
+impl  Mul<Mat4> for Mat4 {
+    type Output = Self;
+    fn mul(self, rhs: Mat4) -> Self::Output {
+        let mut out = Mat4::new();
+        for row in 0..SIZE {
+            for col in 0..SIZE {
+                out[(row, col)] = self[(row, 0 as usize)] * rhs[(0 as usize, col)] +
+                                  self[(row, 1 as usize)] * rhs[(1 as usize, col)] +
+                                  self[(row, 2 as usize)] * rhs[(2 as usize, col)] +
+                                  self[(row, 3 as usize)] * rhs[(3 as usize, col)];
+            }
+        }
+        out
+    }
 }
 
 
