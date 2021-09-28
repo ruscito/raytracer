@@ -1,42 +1,41 @@
-use std::{cmp::min, ops::{Index, IndexMut}};
+use core::panic;
+use std::ops::{Index, IndexMut};
+
+const SIZE: usize = 4;
 
 #[derive(Debug, Clone)]
-pub struct Matrix {
-    pub row: usize,
-    pub column: usize,
-    _buffer: Vec<f32>,
+pub struct Mat4 {
+    buffer: Vec<f32>,
 }
 
-impl Matrix {
-    pub fn new(row: usize, column: usize) -> Self {
+impl Mat4 {
+    pub fn new() -> Self {
         Self {
-            row,
-            column,
-            _buffer: vec![0.0; row*column],
+            buffer: vec![0.0; SIZE*SIZE],
         }
     }
 
 
-    pub fn from_buffer(row: usize, column: usize, buffer: &[f32]) -> Result<Self, String> {
-        if row * column == buffer.len() {
-            Ok(Self { row, column, _buffer: buffer.into()})
+    pub fn from_buffer(buffer: &[f32]) -> Result<Self, String> {
+        if SIZE * SIZE == buffer.len() {
+            Ok(Self { buffer: buffer.into()})
         } else {
-            Err("Matrix - Error creating matrix; buffer size mistmatchd ".into())
+            Err("Matrix - Error creating matrix: buffer size mistmatchd ".into())
         }
     }   
     
     pub fn size(&self) -> usize {
-        self.row * self.column
+        SIZE * SIZE
     }
 }
 
-impl PartialEq for Matrix {
+impl PartialEq for Mat4 {
     fn eq(&self, other: &Self) -> bool {
         if self.size() != other.size() {
             return false;
         }
-        for i in 0..self._buffer.len() {
-            if self._buffer[i] != other._buffer[i] {
+        for i in 0..self.buffer.len() {
+            if self.buffer[i] != other.buffer[i] {
                 return false;
             }
         }
@@ -45,18 +44,22 @@ impl PartialEq for Matrix {
 }
 
 
-impl Index<[usize; 2]> for  Matrix {
+impl Index<(usize, usize)> for  Mat4 {
     type Output = f32;
-    fn index(&self, idx:[usize; 2]) -> &Self::Output {
-        let col = min(self.column - 1, idx[0]);
-        let row = min(self.row - 1, idx[1]);
-        &self._buffer[row * self.column + col]
+    fn index(&self, (x, y):(usize, usize)) -> &Self::Output {
+        if x >= SIZE || y >= SIZE {
+            panic!("Matrix - Error indexing matrix: out of bound");
+        } 
+        &self.buffer[y*SIZE + x]
     }    
 }
 
-impl IndexMut<[usize; 2]> for Matrix {
-    fn index_mut(&mut self, idx:[usize; 2]) -> &mut Self::Output {
-        &mut self._buffer[(min(self.row - 1, idx[1]) * self.column) + min(self.column - 1, idx[0])]
+impl IndexMut<(usize, usize)> for Mat4 {
+    fn index_mut(&mut self, (x, y):(usize, usize)) -> &mut Self::Output {
+        if x >= SIZE || y >= SIZE {
+            panic!("Matrix - Error indexing matrix: out of bound");
+        } 
+        &mut self.buffer[y*SIZE +x]
     }    
 }
 

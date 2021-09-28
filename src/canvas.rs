@@ -62,109 +62,102 @@ impl Canvas {
 }
 
 // https://stackoverflow.com/questions/33770989/implementing-the-index-operator-for-matrices-with-multiple-parameters
-impl Index<[usize; 2]> for  Canvas {
+impl Index<(usize, usize)> for  Canvas {
     type Output = Color;
-    fn index(&self, idx:[usize; 2]) -> &Self::Output {
-        let mut y = self.height - idx[1];
-        let x = min(self.width - 1, idx[0]); 
-        y = min(self.height - 1, y); 
+    fn index(&self, (x, y):(usize, usize)) -> &Self::Output {
+        let x = min(self.width - 1, x); 
+        let y = min(self.height - 1,  self.height - y); 
         &self.pixels[(y * self.width) + x]
     }    
 }
 
-impl IndexMut<[usize; 2]> for  Canvas {
-    fn index_mut(&mut self, idx:[usize; 2]) -> &mut Self::Output {
-        let mut y = self.height - idx[1];
-        let x = min(self.width - 1, idx[0]); 
-        y = min(self.height - 1, y); 
+impl IndexMut<(usize, usize)> for  Canvas {
+    fn index_mut(&mut self, (x, y):(usize, usize)) -> &mut Self::Output {
+        let x = min(self.width - 1, x); 
+        let y = min(self.height - 1, self.height - y); 
         &mut self.pixels[(y * self.width) + x]
     }    
 }
 
-
-impl Index<[f64; 2]> for  Canvas {
+impl Index<(f32, f32)> for  Canvas {
     type Output = Color;
-    fn index(&self, idx:[f64; 2]) -> &Self::Output {
-        let x:usize;
-        let y:usize;
-
-        if idx[0] < 0.0 {
+    fn index(&self, (xf, yf):(f32, f32)) -> &Self::Output {
+        let x: usize;
+        let y: usize;
+        if xf < 0.0 {
             x = 0;
         } else {
-            x = idx[0] as usize
+            x = xf as usize;
         }
 
-        if idx[1] < 0.0 {
+        if yf < 0.0 {
             y = 0;
         } else {
-            y = idx[1] as usize
+            y = xf as usize;
         }
         
-        &self[[x, y]]
+        &self[(x, y)]
     }    
 }
 
-impl IndexMut<[f64; 2]> for  Canvas {
-    fn index_mut(&mut self, idx:[f64; 2]) -> &mut Self::Output {
-        let x:usize;
-        let y:usize;
-
-        if idx[0] < 0.0 {
+impl IndexMut<(f32, f32)> for  Canvas {
+    fn index_mut(&mut self, (xf, yf):(f32, f32)) -> &mut Self::Output {
+        let x: usize;
+        let y: usize;
+        if xf < 0.0 {
             x = 0;
         } else {
-            x = idx[0] as usize
+            x = xf as usize;
         }
 
-        if idx[1] < 0.0 {
+        if yf < 0.0 {
             y = 0;
         } else {
-            y = idx[1] as usize
+            y = yf as usize;
         }
         
-        &mut self[[x, y]]
+        &mut self[(x, y)]
     }    
 }
 
-impl Index<[f32; 2]> for  Canvas {
+impl Index<(f64, f64)> for  Canvas {
     type Output = Color;
-    fn index(&self, idx:[f32; 2]) -> &Self::Output {
-        let x:usize;
-        let y:usize;
-
-        if idx[0] < 0.0 {
+    fn index(&self, (xf, yf):(f64, f64)) -> &Self::Output {
+        let x: usize;
+        let y: usize;
+        if xf < 0.0 {
             x = 0;
         } else {
-            x = idx[0] as usize
+            x = xf as usize;
         }
 
-        if idx[1] < 0.0 {
+        if yf < 0.0 {
             y = 0;
         } else {
-            y = idx[1] as usize
+            y = xf as usize;
         }
         
-        &self[[x, y]]
+        &self[(x, y)]
     }    
 }
 
-impl IndexMut<[f32; 2]> for  Canvas {
-    fn index_mut(&mut self, idx:[f32; 2]) -> &mut Self::Output {
-        let x:usize;
-        let y:usize;
-
-        if idx[0] < 0.0 {
+impl IndexMut<(f64, f64)> for  Canvas {
+    fn index_mut(&mut self, (xf, yf):(f64, f64)) -> &mut Self::Output {
+        let x: usize;
+        let y: usize;
+        if xf < 0.0 {
             x = 0;
         } else {
-            x = idx[0] as usize
+            x = xf as usize;
         }
 
-        if idx[1] < 0.0 {
+        if yf < 0.0 {
             y = 0;
         } else {
-            y = idx[1] as usize
+            y = yf as usize;
         }
         
-        &mut self[[x, y]]
+        &mut self[(x, y)]
     }    
 }
 
