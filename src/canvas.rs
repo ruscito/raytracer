@@ -55,27 +55,23 @@ impl Canvas {
                 Err(_) => Err(String::from("Error saving the canvas"))
             }
     }
-
-    fn _x_bound_check(&mut self, x:usize) -> usize {
-        min(self.width - 1, x)        
-    }
 }
 
 // https://stackoverflow.com/questions/33770989/implementing-the-index-operator-for-matrices-with-multiple-parameters
 impl Index<(usize, usize)> for  Canvas {
     type Output = Color;
-    fn index(&self, (x, y):(usize, usize)) -> &Self::Output {
-        let x = min(self.width - 1, x); 
-        let y = min(self.height - 1,  self.height - y); 
-        &self.pixels[(y * self.width) + x]
+    fn index(&self, (row, col):(usize, usize)) -> &Self::Output {
+        let col = min(self.width - 1, col); 
+        let row = min(self.height - 1,  self.height - row); 
+        &self.pixels[(row * self.width) + col]
     }    
 }
 
 impl IndexMut<(usize, usize)> for  Canvas {
-    fn index_mut(&mut self, (x, y):(usize, usize)) -> &mut Self::Output {
-        let x = min(self.width - 1, x); 
-        let y = min(self.height - 1, self.height - y); 
-        &mut self.pixels[(y * self.width) + x]
+    fn index_mut(&mut self, (row, col):(usize, usize)) -> &mut Self::Output {
+        let col = min(self.width - 1, col); 
+        let row = min(self.height - 1, self.height - row); 
+        &mut self.pixels[(row * self.width) + col]
     }    
 }
 

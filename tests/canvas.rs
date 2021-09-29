@@ -9,10 +9,10 @@ fn creating_canvas() {
 
 #[test]
 fn index_access() {
-    let mut c = Canvas::new(10, 20);
+    let mut c = Canvas::new(10, 21);
     assert_eq!(c[(10,10)], BLACK);
-    c[(10,10)] = WHITE;
-    assert_eq!(c[(10,10)], Color::from((255, 255, 255)));
+    c[(9,20)] = WHITE;
+    assert_eq!(c[(9,20)], Color::from((255, 255, 255)));
 }
 
 #[test]
@@ -33,6 +33,6 @@ fn set_canvas_background() {
 fn save_canvas() {
     let mut c = Canvas::new(400, 400);
     c.backgound(BLUE);
-    c.save("my_image.png").unwrap();
+    c.save("test.png").unwrap();
     assert_eq!(c[(0, 0)], BLUE);
 }

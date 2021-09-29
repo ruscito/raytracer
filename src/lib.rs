@@ -1,7 +1,15 @@
 pub mod tuple;
 pub mod color;
 pub mod canvas;
-pub mod matrix;
+pub mod matrix{
+    pub use mat2::Mat2 as Mat2;
+    pub use mat3::Mat3 as Mat3;
+    pub use mat4::Mat4 as Mat4;
+
+    pub mod mat2;
+    pub mod mat3;
+    pub mod mat4;
+}
 
 pub const EPSILON: f32 = 0.01;
 

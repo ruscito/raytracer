@@ -1,4 +1,4 @@
-use raytracer::{canvas::Canvas, color::{BLUE, YELLOW}, matrix::Mat4, tuple::Tuple};
+use raytracer::{canvas::Canvas, color::{BLACK, WHITE}, matrix::Mat4, tuple::Tuple};
 
 
 #[derive(Debug)]
@@ -32,11 +32,11 @@ fn demo(){
     };
     
     let mut cv= Canvas::new(950, 550);
-    cv.backgound(YELLOW);    
+    cv.backgound(WHITE);    
     
     while p.position.y > 0.0 {
         p  = tick(&e, p);
-        cv[(p.position.x, p.position.y)] = BLUE;
+        cv[(p.position.y, p.position.x)] = BLACK;
     }
 
     cv.save("test.png").unwrap();
