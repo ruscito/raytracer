@@ -1,9 +1,11 @@
 use core::panic;
-use std::ops::{Index, IndexMut, Mul};
+use std::{convert::TryInto, ops::{Index, IndexMut, Mul}};
+
+use super::Mat2;
 
 const SIZE: usize = 3;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Copy)]
 pub struct Mat3 {
     buffer: [f32; SIZE*SIZE],
 }
@@ -16,8 +18,8 @@ impl Mat3 {
     }
 
 
-    pub fn from_buffer(buffer: &[f32;SIZE*SIZE]) -> Self {
-        Self { buffer: *buffer}
+    pub fn from_buffer(buffer: [f32;SIZE*SIZE]) -> Self {
+        Self { buffer: buffer}
     }   
     
     pub fn size(&self) -> usize {
@@ -41,6 +43,45 @@ impl Mat3 {
             }
         }
         out
+    }
+
+    pub fn submatrix(&self, row:usize, col: usize) ->Mat2 {
+        let mut tmp = Vec::new();
+        for i in 0..SIZE {
+            for j in 0..SIZE {
+                if i != row && j != col {
+                    tmp.push(self[(i, j)]); 
+                }  
+            }
+        }
+        Mat2::from_buffer(tmp[0..4].try_into().unwrap())
+    }
+
+    pub fn minor(&self, row:usize, col:usize) -> f32 {
+        // the submatrix return a mat2
+        // so the determinat called is the one from mat2
+        // with a mat2 we know how to calculate the 
+        // determinant
+        self.submatrix(row, col).det()
+    }
+
+    pub fn cofactor(&self, row:usize, col:usize) -> f32 {
+        if (row + col) % 2 != 0 {
+            return -self.minor(row, col);
+        } 
+        self.minor(row, col)
+    }
+
+    pub fn det(&self) -> f32{
+        let mut det = 0.0f32;
+        for col in 0..SIZE {
+            det = det + self[(0, col)] * self.cofactor(0, col);
+        }
+        det
+    }
+    
+    pub fn is_invertible(&self) -> bool {
+        self.det() != 0.0 
     }
 }
 

@@ -42,6 +42,7 @@ fn color_to_byte() {
     assert_eq!(t, (255, 0, 128));
 }
 
+/*
 #[test]
 fn from_tuple_to_color() {
     let c1 = Color::from((255,0,128));
@@ -49,3 +50,4 @@ fn from_tuple_to_color() {
     assert_eq!(c1, Color::new(1.0, 0.0, 0.5));
     assert_eq!(c2, Color::new(1.0, 0.0, 0.5));
 }
+*/

@@ -15,9 +15,8 @@ impl Mat2 {
         }
     }
 
-
-    pub fn from_buffer(buffer: &[f32;SIZE*SIZE]) -> Self {
-        Self { buffer: *buffer}
+    pub fn from_buffer(buffer: [f32;SIZE*SIZE]) -> Self {
+        Self { buffer: buffer}
     }   
     
     pub fn size(&self) -> usize {
@@ -40,6 +39,17 @@ impl Mat2 {
             }
         }
         out
+    }
+
+    pub fn det(&self) -> f32 {
+        // [a,b]
+        // [c,d]  determinant = ad - bc
+        self[(0,0)]*self[(1,1)] - self[(0,1)]*self[(1,0)]
+    }
+
+
+    pub fn is_invertible(&self) -> bool {
+        self.det() != 0.0 
     }
 }
 

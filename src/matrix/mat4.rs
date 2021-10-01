@@ -1,11 +1,11 @@
 use core::panic;
-use std::ops::{Index, IndexMut, Mul};
-
+use std::{convert::TryInto, ops::{Index, IndexMut, Mul}};
 use crate::tuple::Tuple;
+use super::Mat3;
 
 const SIZE: usize = 4;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Copy)]
 pub struct Mat4 {
     buffer: [f32; SIZE*SIZE],
 }
@@ -18,8 +18,8 @@ impl Mat4 {
     }
 
 
-    pub fn from_buffer(buffer: &[f32;SIZE*SIZE]) -> Self {
-        Self { buffer: *buffer}
+    pub fn from_buffer(buffer: [f32;SIZE*SIZE]) -> Self {
+        Self { buffer: buffer}
     }   
     
     pub fn size(&self) -> usize {
@@ -41,6 +41,62 @@ impl Mat4 {
         for row in 0..SIZE {
             for col in 0..SIZE {
                 out[(row, col)] = self[(col, row)]
+            }
+        }
+        out
+    }
+
+    pub fn submatrix(&self, row:usize, col: usize) ->Mat3 {
+        let mut tmp = Vec::new();
+        for i in 0..SIZE {
+            for j in 0..SIZE {
+                if i != row && j != col {
+                    tmp.push(self[(i, j)]); 
+                }  
+            }
+        }
+        // let arr: [_; N] = slice.try_into().unwrap() (replace N)
+        // (&tmp[0..9]).try_into().unwrap() or
+        // let arr:[f32;9] = tmp[0..9].try_into().unwrap(); 
+        Mat3::from_buffer(tmp[0..9].try_into().unwrap())
+    }
+
+    pub fn minor(&self, row:usize, col:usize) -> f32 {
+        // the submatrix return a mat3
+        // so the determinat called is the one from mat3
+        self.submatrix(row, col).det()
+    }
+
+    pub fn cofactor(&self, row:usize, col:usize) -> f32 {
+        if (row + col) % 2 != 0 {
+            return -self.minor(row, col);
+        } 
+        self.minor(row, col)
+    }
+
+    pub fn det(&self) -> f32{
+        let mut det = 0.0f32;
+        for col in 0..SIZE {
+            det = det + self[(0, col)] * self.cofactor(0, col);
+        }
+        det
+    }
+
+    pub fn is_invertible(&self) -> bool {
+        self.det() != 0.0 
+    }
+
+    pub fn inv(&self) -> Mat4 {
+        if !self.is_invertible() {
+            panic!("Non invertible matrix :{:?}", self);
+        }
+        let mut out = Mat4::new();
+        for row in 0..SIZE {
+            for col in 0..SIZE {
+                let cofactor = self.cofactor(row, col);
+                // note that "col, row" here in stead of "row, col",
+                // accomplishes the transpose operation
+                out[(col, row)] = cofactor / self.det();
             }
         }
         out
