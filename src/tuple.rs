@@ -37,6 +37,13 @@ impl Tuple {
         (self.x.powi(2) + self.y.powi(2) + self.z.powi(2)).sqrt()
     }
 
+    pub fn distance(&self, other:&Tuple) -> f32 {
+        ((other.x -self.x).powf(2.0) 
+            + (other.y -self.y).powf(2.0)
+            + (other.z -self.z).powf(2.0) 
+        ).sqrt()
+    }
+
     pub fn normalize(self) -> Self {
         Self {
             x: self.x / self.magnitude(),
@@ -138,4 +145,13 @@ impl Mul <f32> for Tuple {
             w: self.w * rhs,
         }        
     }
+}
+
+
+pub fn point(x: f32, y: f32, z: f32,) -> Tuple {
+    Tuple::new(x, y, z, 1.0)
+}
+
+pub fn vector(x: f32, y: f32, z: f32,) -> Tuple {
+    Tuple::new(x, y, z, 0.0)
 }

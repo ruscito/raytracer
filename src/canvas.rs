@@ -1,4 +1,4 @@
-use std::{cmp::min, ops::{Index, IndexMut}};
+use std::{cmp::{max, min}, ops::{Index, IndexMut}};
 
 
 use crate::color::Color;
@@ -61,16 +61,21 @@ impl Canvas {
 impl Index<(usize, usize)> for  Canvas {
     type Output = Color;
     fn index(&self, (row, col):(usize, usize)) -> &Self::Output {
+        let row = (self.height - row).clamp(0, self.height -1); 
         let col = min(self.width - 1, col); 
-        let row = min(self.height - 1,  self.height - row); 
+        debug_assert!(col<=self.width);
+        debug_assert!(row<=self.height);
+       
         &self.pixels[(row * self.width) + col]
     }    
 }
 
 impl IndexMut<(usize, usize)> for  Canvas {
     fn index_mut(&mut self, (row, col):(usize, usize)) -> &mut Self::Output {
+        let row = min(self.height-1,self.height - row.clamp(0,  self.height));
         let col = min(self.width - 1, col); 
-        let row = min(self.height - 1, self.height - row); 
+        debug_assert!(col<=self.width);
+        debug_assert!(row<=self.height);
         &mut self.pixels[(row * self.width) + col]
     }    
 }
@@ -111,7 +116,6 @@ impl IndexMut<(f32, f32)> for  Canvas {
         } else {
             y = yf as usize;
         }
-        
         &mut self[(x, y)]
     }    
 }
