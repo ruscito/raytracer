@@ -1,4 +1,4 @@
-use raytracer::{canvas::Canvas, color::{BLACK, WHITE}, matrix::Mat4, tuple::Tuple};
+use raytracer::{canvas::Canvas, color::{BLACK, RED, WHITE}, matrix::mat4::identity, tuple::Tuple};
 
 
 #[derive(Debug)]
@@ -20,7 +20,7 @@ fn tick(env: &Environment, proj: Projectile) -> Projectile {
 }
 
 
-fn demo(){
+fn projectile(){
     let mut p = Projectile{ 
         position: Tuple::point(0.0, 1.0, 0.0),
         velocity: Tuple::vector(1.0, 1.8, 0.0).normalize() * 11.65,
@@ -42,8 +42,23 @@ fn demo(){
     cv.save("test.png").unwrap();
 
 }
+
+fn clock() {
+    let width = 600usize;
+    let height = 600usize;
+    let mut canvas = Canvas::new(width, height);
+    let mut p = Tuple::point(0.0, 0.0, 0.0);
+    let origin = identity().translate(300.0, 300.0, 0.0) * p; 
+    let mut degrees = 0.0 as f32;
+    
+    
+    canvas[(origin.x, origin.y)] = RED;
+
+    canvas.save("clock.png").unwrap();
+}
+
+
 fn main() {
-    demo();
-    let mut m=Mat4::new();
-    m[(0,3)] = 4.3;
+    projectile();
+    clock();
 }
