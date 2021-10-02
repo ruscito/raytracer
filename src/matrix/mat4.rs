@@ -101,6 +101,60 @@ impl Mat4 {
         }
         out
     }
+
+    pub fn translate(x:f32, y:f32, z:f32) -> Mat4 {
+        Self{
+            buffer: [ 1.0, 0.0, 0.0,  x,
+                      0.0, 1.0, 0.0,  y,  
+                      0.0, 0.0, 1.0,  z,  
+                      0.0, 0.0, 0.0, 1.0 ]
+        }
+    }
+
+    pub fn scale(x:f32, y:f32, z:f32) -> Mat4 {
+        Self{
+            buffer: [  x,  0.0, 0.0, 0.0,
+                      0.0,  y,  0.0, 0.0,  
+                      0.0, 0.0,  z,  0.0,  
+                      0.0, 0.0, 0.0, 1.0 ]
+        }
+    }
+
+    pub fn rotate_x(r: f32) -> Mat4 {
+        Self{
+            buffer: [ 1.0,    0.0,      0.0, 0.0,
+                      0.0, r.cos(),-r.sin(), 0.0,  
+                      0.0, r.sin(), r.cos(), 0.0,  
+                      0.0,    0.0,      0.0, 1.0 ]
+        }
+    }
+    
+    pub fn rotate_y(r: f32) -> Mat4 {
+        Self{
+            buffer: [r.cos(), 0.0, r.sin(), 0.0,
+                         0.0, 1.0,     0.0, 0.0,  
+                    -r.sin(), 0.0, r.cos(), 0.0,  
+                         0.0, 0.0,     0.0, 1.0 ]
+        }
+    }
+    
+    pub fn rotate_z(r: f32) -> Mat4 {
+        Self{
+            buffer: [ r.cos(), -r.sin(), 0.0, 0.0,
+                      r.sin(),  r.cos(), 0.0, 0.0,  
+                          0.0,      0.0, 1.0, 0.0,  
+                          0.0,      0.0, 0.0, 1.0 ]
+        }
+    }
+
+    pub fn skew(xy:f32, xz:f32, yx:f32, yz:f32, zx:f32, zy:f32) -> Mat4 {
+        Self{
+            buffer: [ 1.0,  xy,  xz, 0.0,
+                       yx, 1.0,  yz, 0.0,  
+                       zx,  zy, 1.0, 0.0,  
+                      0.0, 0.0, 0.0, 1.0 ]
+        }        
+    }
 }
 
 impl PartialEq for Mat4 {

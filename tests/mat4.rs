@@ -182,3 +182,4 @@ fn calcualting_inverse() {
     assert_eq!(m.inv(), inv_m);
 }
 
+
