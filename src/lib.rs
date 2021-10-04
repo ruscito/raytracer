@@ -1,3 +1,5 @@
+use std::sync::atomic::{AtomicUsize, Ordering};
+
 pub mod tuple;
 pub mod color;
 pub mod canvas;
@@ -10,6 +12,9 @@ pub mod matrix{
     pub mod mat3;
     pub mod mat4;
 }
+pub mod ray;
+pub mod sphere;
+
 pub const EPSILON: f32 = 0.00001;
 
 pub fn f32eq(a: f32, b: f32) -> bool {
@@ -26,3 +31,8 @@ fn f32_to_u8(c: f32) -> u8 {
         (c * 256.0) as u8 
     }
 }  
+
+static COUNTER:AtomicUsize = AtomicUsize::new(1);
+
+// https://users.rust-lang.org/t/idiomatic-rust-way-to-generate-unique-id/33805
+pub fn get_id() -> usize {COUNTER.fetch_add(1, Ordering::Relaxed) }

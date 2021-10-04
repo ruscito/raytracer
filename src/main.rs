@@ -54,6 +54,7 @@ fn clock() {
     let mut canvas = Canvas::new(width, height);
     let radius = width as f32 * 0.375;
     
+    // translate P(0,0,0) origin to the center of the canvas
     let clock_centered_orgin = identity().translate(300.0, 300.0, 0.0) * point(0.0, 0.0, 0.0);
     
     // In case of rotation around z axis 12 o'clock is on the y axis
