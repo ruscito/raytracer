@@ -1,5 +1,7 @@
 
-use raytracer::{canvas::Canvas, color::{BLACK, RED, WHITE}, matrix::mat4::identity, tuple::{Tuple, point}};
+use std::f32::consts::PI;
+
+use raytracer::{canvas::Canvas, color::RED, matrix::mat4::{identity, rotate_z}, tuple::{Tuple, point}};
 
 
 #[derive(Debug)]
@@ -32,12 +34,11 @@ fn projectile(){
         wind: Tuple::vector(-0.01, 0.0, 0.0),
     };
     
-    let mut cv= Canvas::new(950, 550);
-    cv.backgound(WHITE);    
+    let mut cv= Canvas::new(950, 550);   
     
     while p.position.y > 0.0 {
         p  = tick(&e, p);
-        cv[(p.position.y, p.position.x)] = BLACK;
+        cv[(p.position.y, p.position.x)] = RED;
     }
 
     cv.save("projectile.png").unwrap();
@@ -45,17 +46,35 @@ fn projectile(){
 }
 
 fn clock() {
+    // Challenge ch.4:
+    // Write a program that uses a rotation matrix to cmpute the position of those hours nt the clock face,
+    // and draw a pixel onto a canvas for each of them.
     let width = 600usize;
     let height = 600usize;
     let mut canvas = Canvas::new(width, height);
-    let p = Tuple::point(0.0, 0.0, 0.0);
-    let origin = identity().translate(300.0, 300.0, 0.0) * p; 
-    //let mut degrees = 0.0 as f32;
+    let radius = width as f32 * 0.375;
     
+    let clock_centered_orgin = identity().translate(300.0, 300.0, 0.0) * point(0.0, 0.0, 0.0);
     
-    canvas[(origin.y, origin.x)] = RED;
-    let origin = identity().translate(150.0, 0.0, 0.0) * origin; 
-    canvas[(origin.y, origin.x)] = RED;
+    // In case of rotation around z axis 12 o'clock is on the y axis
+    let clock_at_12 = point(0.0, 1.0, 0.0);
+
+    // 2pi radians in a circle so each hour is rotated 2PI/12 = PI/6
+    // all the point ar calculated with center being at p(0,0,0)
+    for i in 1..13 {
+        //position = rotate_z(PI/6.0) * clock_at_12; in 
+        let mut position = rotate_z(i as f32 * (PI/6.0)) * clock_at_12;
+
+        // moltiplicate by the radius to move far from 1
+        position.x = position.x * radius;
+        position.y = position.y * radius;
+
+        // move the position to the center
+        position.x = position.x + clock_centered_orgin.x;
+        position.y = position.y + clock_centered_orgin.y;
+
+        canvas[(position.y, position.x)] = RED;
+    }
 
     canvas.save("clock.png").unwrap();
 }
@@ -65,7 +84,7 @@ fn move_a_point(){
     
     let start_point = point(100.0, 100.0, 0.0);
     let end_point = point(150.0, 130.0, 0.0);
-    let speed = 0.50;
+    let speed = 0.01;
     
     let direction = end_point - start_point;
     let distance = start_point.distance(&end_point);
@@ -76,19 +95,10 @@ fn move_a_point(){
     println!("Start distance ={}",distance);
 
 
-    while position.distance(&end_point) > 1.0 {
-        //println!("distance ={}",position.distance(&end_point));
-        //println!("main row:{} - col:{}", position.y, position.x);
+    while position.distance(&start_point) <= start_point.distance(&end_point) {
         cv[(position.y, position.x)]= RED;
         position = position + velocity;
     }
-    
-    
-    
-
-
-
-
     cv.save("move_a_point.png").unwrap();
 }
 

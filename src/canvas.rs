@@ -1,4 +1,4 @@
-use std::{cmp::{max, min}, ops::{Index, IndexMut}};
+use std::{cmp::min, ops::{Index, IndexMut}};
 
 
 use crate::color::Color;
