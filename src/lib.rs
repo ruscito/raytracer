@@ -14,6 +14,8 @@ pub mod matrix{
 }
 pub mod ray;
 pub mod sphere;
+pub mod shape;
+pub mod intersection;
 
 pub const EPSILON: f32 = 0.00001;
 

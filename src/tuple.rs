@@ -44,7 +44,7 @@ impl Tuple {
         ).sqrt()
     }
 
-    pub fn normalize(self) -> Self {
+    pub fn normalize(&self) -> Self {
         Self {
             x: self.x / self.magnitude(),
             y: self.y / self.magnitude(),
