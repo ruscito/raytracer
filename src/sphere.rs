@@ -1,5 +1,6 @@
-use crate::{get_id, ray::Ray, shape::Shape, tuple::point};
-
+use crate::{get_id, intersection::Intersection, ray::Ray, shape::Shape, tuple::point};
+// `Any` allows us to do dynamic typecasting.
+use std::any::Any;
 
 #[derive(Debug, Copy, Clone)]
 pub struct Sphere {
@@ -14,8 +15,15 @@ impl Sphere {
     }
 }
 
+impl PartialEq for Sphere {
+    fn eq(&self, other: &Self) -> bool {
+        //std::ptr::eq(self, other)
+        self.id() == other.id()
+    }
+}
+
 impl Shape for Sphere {
-    fn intersect(&self, ray: Ray) -> Vec<f32> {
+    fn intersect(&self, ray: Ray) -> Vec<Intersection> {
         let sphere_to_ray = ray.origin - point(0.0, 0.0, 0.0);
 
         let a = ray.direction.dot(&ray.direction);
@@ -34,13 +42,32 @@ impl Shape for Sphere {
         let t2 = (-b + discriminant.sqrt()) / (2.0 * a);
 
         if t1 > t2 {
-            return vec![t2, t1]
+            return vec![Intersection { t: t2, object: Box::new(*self)} , Intersection { t: t1, object: Box::new(*self)}];
         }  
-        vec![t1, t2]
+        vec![Intersection { t: t1, object: Box::new(*self)} , Intersection { t: t2, object: Box::new(*self)}]
 
     }   
 
     fn id(&self) -> usize {
         self.id
+    }
+
+    fn clone_box(&self) -> Box<dyn Shape> { 
+        Box::new(self.clone())
+    }
+
+    // An &Any can be cast to a reference to a concrete type.
+    fn as_any(&self) -> &dyn Any{
+        self 
+    }
+
+    // Perform the test.
+    fn eq_box(&self, other: &dyn Any) -> bool {
+        //other.downcast_ref::<Self>().map_or(false, |a| self == a)
+        match other.downcast_ref::<Self>() {
+            Some(s) => self.id == s.id,
+            _ => false
+        } 
+
     }
 }
