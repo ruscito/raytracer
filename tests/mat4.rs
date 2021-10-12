@@ -91,13 +91,13 @@ fn matrix_by_identity() {
         2.0, 4.0, 8.0, 16.0,
         4.0, 8.0, 16.0, 32.0]);
     let m2 = m1.clone();
-    assert_eq!(m1*Mat4::identiy(), m2)            
+    assert_eq!(m1*Mat4::identity(), m2)            
 }
 
 #[test]
 fn identiy_by_tuple() {
     let a = Tuple::new(1.0, 2.0, 3.0, 4.0);
-    assert_eq!(Mat4::identiy()*a, a)
+    assert_eq!(Mat4::identity()*a, a)
 }
 
 #[test]
@@ -117,8 +117,8 @@ fn transpose_matrix() {
 
 #[test]
 fn transpose_identy() {
-    let m1 = Mat4::identiy();
-    assert_eq!(m1.transpose(), Mat4::identiy())
+    let m1 = Mat4::identity();
+    assert_eq!(m1.transpose(), Mat4::identity())
 }
 
 #[test]
@@ -187,33 +187,33 @@ fn calcualting_inverse() {
 
 #[test]
 fn translation_fetures() {
-    let transform = Mat4::identiy().translate(5.0, -3.0, 2.0);
+    let transform = Mat4::identity().translate(5.0, -3.0, 2.0);
     assert_eq!(transform * Tuple::point(-3.0, 4.0, 5.0),  Tuple::point(2.0, 1.0, 7.0));
     
     // muliplying by the inverse translation matrix
-    let transform = Mat4::identiy().translate(5.0, -3.0, 2.0);
+    let transform = Mat4::identity().translate(5.0, -3.0, 2.0);
     assert_eq!(transform.inv() * Tuple::point(-3.0, 4.0, 5.0),  Tuple::point(-8.0, 7.0, 3.0));
 
-    let transform = Mat4::identiy().translate(5.0, -3.0, 2.0);
+    let transform = Mat4::identity().translate(5.0, -3.0, 2.0);
     assert_eq!(transform * Tuple::vector(-3.0, 4.0, 5.0),  Tuple::vector(-3.0, 4.0, 5.0));
 }
 
 #[test]
 fn scaling_fetures() {
     // scale applied to a point
-    let scale = Mat4::identiy().scale(2.0, 3.0, 4.0);
+    let scale = Mat4::identity().scale(2.0, 3.0, 4.0);
     assert_eq!(scale * Tuple::point(-4.0, 6.0, 8.0),  Tuple::point(-8.0, 18.0, 32.0));
     
     // scale applied to a vector
-    let scale = Mat4::identiy().scale(2.0, 3.0, 4.0);
+    let scale = Mat4::identity().scale(2.0, 3.0, 4.0);
     assert_eq!(scale * Tuple::vector(-4.0, 6.0, 8.0),  Tuple::vector(-8.0, 18.0, 32.0));
 
     // muliplying by the inverse translation matrix
-    let scale = Mat4::identiy().scale(2.0, 3.0, 4.0);
+    let scale = Mat4::identity().scale(2.0, 3.0, 4.0);
     assert_eq!(scale.inv() * Tuple::point(-4.0, 6.0, 8.0),  Tuple::point(-2.0, 2.0, 2.0));
 
     // reflection or mirror
-    let scale = Mat4::identiy().scale(-1.0, 1.0, 1.0);
+    let scale = Mat4::identity().scale(-1.0, 1.0, 1.0);
     assert_eq!(scale * Tuple::point(-4.0, 6.0, 8.0),  Tuple::point(4.0, 6.0, 8.0));
 }
 
@@ -221,8 +221,8 @@ fn scaling_fetures() {
 fn rotation_x() {
     // rotation around x axis
     let p = Tuple::point(0.0, 1.0, 0.0);
-    let half_quarter = Mat4::identiy().rotate_x(PI/4.0);
-    let full_quarter = Mat4::identiy().rotate_x(PI/2.0);
+    let half_quarter = Mat4::identity().rotate_x(PI/4.0);
+    let full_quarter = Mat4::identity().rotate_x(PI/2.0);
     assert_eq!(half_quarter * p, Tuple::point(0.0, 2.0f32.sqrt()/2.0, 2.0f32.sqrt()/2.0));
     assert_eq!(full_quarter * p, Tuple::point(0.0, 0.0, 1.0));
     // inverse of x rotation rotates in opposite dir
@@ -233,8 +233,8 @@ fn rotation_x() {
 fn rotation_y() {
     // rotation around y axis
     let p = Tuple::point(0.0, 0.0, 1.0);
-    let half_quarter = Mat4::identiy().rotate_y(PI/4.0);
-    let full_quarter = Mat4::identiy().rotate_y(PI/2.0);
+    let half_quarter = Mat4::identity().rotate_y(PI/4.0);
+    let full_quarter = Mat4::identity().rotate_y(PI/2.0);
     assert_eq!(half_quarter * p, Tuple::point(2.0f32.sqrt()/2.0, 0.0, 2.0f32.sqrt()/2.0));
     assert_eq!(full_quarter * p, Tuple::point(1.0, 0.0, 0.0));
 }
@@ -243,37 +243,37 @@ fn rotation_y() {
 fn rotation_z() {
     // rotation around z axis
     let p = Tuple::point(0.0, 1.0, 0.0);
-    let half_quarter = Mat4::identiy().rotate_z(PI/4.0);
-    let full_quarter = Mat4::identiy().rotate_z(PI/2.0);
+    let half_quarter = Mat4::identity().rotate_z(PI/4.0);
+    let full_quarter = Mat4::identity().rotate_z(PI/2.0);
     assert_eq!(half_quarter * p, Tuple::point(-2.0f32.sqrt()/2.0, 2.0f32.sqrt()/2.0, 0.0));
     assert_eq!(full_quarter * p, Tuple::point(-1.0, 0.0, 0.0));
 }
 
 #[test]
 fn shearing() {
-    let t = Mat4::identiy().skew(1.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+    let t = Mat4::identity().skew(1.0, 0.0, 0.0, 0.0, 0.0, 0.0);
     assert_eq!(t * Tuple::point(2.0, 3.0, 4.0), Tuple::point(5.0, 3.0, 4.0));
 
-    let t = Mat4::identiy().skew(0.0, 1.0, 0.0, 0.0, 0.0, 0.0);
+    let t = Mat4::identity().skew(0.0, 1.0, 0.0, 0.0, 0.0, 0.0);
     assert_eq!(t * Tuple::point(2.0, 3.0, 4.0), Tuple::point(6.0, 3.0, 4.0));
 
-    let t = Mat4::identiy().skew(0.0, 0.0, 1.0, 0.0, 0.0, 0.0);
+    let t = Mat4::identity().skew(0.0, 0.0, 1.0, 0.0, 0.0, 0.0);
     assert_eq!(t * Tuple::point(2.0, 3.0, 4.0), Tuple::point(2.0, 5.0, 4.0));
 
-    let t = Mat4::identiy().skew(0.0, 0.0, 0.0, 1.0, 0.0, 0.0);
+    let t = Mat4::identity().skew(0.0, 0.0, 0.0, 1.0, 0.0, 0.0);
     assert_eq!(t * Tuple::point(2.0, 3.0, 4.0), Tuple::point(2.0, 7.0, 4.0));
 
-    let t = Mat4::identiy().skew(0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+    let t = Mat4::identity().skew(0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
     assert_eq!(t * Tuple::point(2.0, 3.0, 4.0), Tuple::point(2.0, 3.0, 6.0));
 
-    let t = Mat4::identiy().skew(0.0, 0.0, 0.0, 0.0, 0.0, 1.0);
+    let t = Mat4::identity().skew(0.0, 0.0, 0.0, 0.0, 0.0, 1.0);
     assert_eq!(t * Tuple::point(2.0, 3.0, 4.0), Tuple::point(2.0, 3.0, 7.0))
 }
 
 #[test]
 fn chaining_transform() {
     let p = Tuple::point(1.0, 0.0, 1.0);
-    let t = Mat4::identiy().
+    let t = Mat4::identity().
         translate(10.0, 5.0, 7.0).
         scale(5.0, 5.0, 5.0).
         rotate_x(PI/2.0);

@@ -26,7 +26,7 @@ impl Mat4 {
         SIZE * SIZE
     }
 
-    pub fn identiy()-> Self {
+    pub fn identity()-> Self {
         Self{
             buffer: [ 1.0, 0.0, 0.0, 0.0,
                       0.0, 1.0, 0.0, 0.0,  

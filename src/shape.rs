@@ -1,3 +1,4 @@
+use crate::matrix::Mat4;
 use crate::{intersection::Intersection, ray::Ray};
 use std::fmt;
 // `Any` allows us to do dynamic typecasting.
@@ -20,6 +21,10 @@ pub trait Shape : fmt::Debug {
 
     // Perform the test.
     fn eq_box(&self, other: &dyn Any) -> bool;
+
+    fn get_transform(&self) -> Mat4;
+
+    fn set_transform(&mut self, m: Mat4);
 }
 
 impl Clone for ShapeObject {

@@ -1,16 +1,18 @@
-use crate::{get_id, intersection::Intersection, ray::Ray, shape::Shape, tuple::point};
+use crate::{get_id, intersection::Intersection, matrix::Mat4, ray::Ray, shape::Shape, tuple::point};
 // `Any` allows us to do dynamic typecasting.
 use std::any::Any;
 
 #[derive(Debug, Copy, Clone)]
 pub struct Sphere {
     id: usize,
+    transform: Mat4,
 }
 
 impl Sphere {
     pub fn new() -> Self {
         Self {
-            id: get_id()
+            id: get_id(),
+            transform: Mat4::identity(),
         }
     }
 }
@@ -24,6 +26,9 @@ impl PartialEq for Sphere {
 
 impl Shape for Sphere {
     fn intersect(&self, ray: Ray) -> Vec<Intersection> {
+
+        let ray = ray.transform(&self.transform.inv());
+
         let sphere_to_ray = ray.origin - point(0.0, 0.0, 0.0);
 
         let a = ray.direction.dot(&ray.direction);
@@ -68,6 +73,13 @@ impl Shape for Sphere {
             Some(s) => self.id == s.id,
             _ => false
         } 
+    }
 
+    fn get_transform(&self) -> Mat4 {
+        self.transform.clone()
+    }
+
+    fn set_transform(&mut self, m: Mat4) {
+        self.transform = m;
     }
 }
