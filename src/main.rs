@@ -110,8 +110,6 @@ fn raycast_2d_sphere() {
     
     let mut canvas = Canvas::new(canvas_pixels, canvas_pixels);
 
-    //    let t = mat4::scale(0.5, 1.0, 0.5);
-
     let t = Mat4::identity().skew(0.5, 0., 0.5, 0., 0., 0.).scale(0.5, 1., 0.5);
 
     let mut s = Sphere::new(); //unit sphere
