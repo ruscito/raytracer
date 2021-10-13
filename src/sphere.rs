@@ -1,4 +1,4 @@
-use crate::{get_id, intersection::Intersection, matrix::Mat4, ray::Ray, shape::Shape, tuple::point};
+use crate::{get_id, intersection::{Intersection, Intersections}, matrix::Mat4, ray::Ray, shape::Shape, tuple::point};
 // `Any` allows us to do dynamic typecasting.
 use std::any::Any;
 
@@ -25,7 +25,7 @@ impl PartialEq for Sphere {
 }
 
 impl Shape for Sphere {
-    fn intersect(&self, ray: Ray) -> Vec<Intersection> {
+    fn intersect(&self, ray: Ray) -> Intersections {
 
         let ray = ray.transform(&self.transform.inv());
 
@@ -40,16 +40,16 @@ impl Shape for Sphere {
         let discriminant = b.powf(2.0) - 4.0 * a * c;
         
         if discriminant < 0.0 {
-            return vec![];
+            return Intersections::new(vec![]);
         } 
 
         let t1 = (-b - discriminant.sqrt()) / (2.0 * a);
         let t2 = (-b + discriminant.sqrt()) / (2.0 * a);
 
         if t1 > t2 {
-            return vec![Intersection { t: t2, object: Box::new(*self)} , Intersection { t: t1, object: Box::new(*self)}];
+            return Intersections::new(vec![Intersection { t: t2, object: Box::new(*self)} , Intersection { t: t1, object: Box::new(*self)}]);
         }  
-        vec![Intersection { t: t1, object: Box::new(*self)} , Intersection { t: t2, object: Box::new(*self)}]
+        Intersections::new(vec![Intersection { t: t1, object: Box::new(*self)} , Intersection { t: t2, object: Box::new(*self)}])
 
     }   
 

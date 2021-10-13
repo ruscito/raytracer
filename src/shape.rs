@@ -1,5 +1,5 @@
 use crate::matrix::Mat4;
-use crate::{intersection::Intersection, ray::Ray};
+use crate::{intersection::Intersections, ray::Ray};
 use std::fmt;
 // `Any` allows us to do dynamic typecasting.
 use std::any::Any;
@@ -9,7 +9,7 @@ pub type ShapeObject = Box<dyn Shape>;
 pub trait Shape : fmt::Debug {
     // intesect return None or two values that represent 
     // respectively number of units away from the ray's origin
-    fn intersect(&self, ray: Ray) -> Vec<Intersection>;
+    fn intersect(&self, ray: Ray) -> Intersections;
 
     fn id(&self) -> usize;
 

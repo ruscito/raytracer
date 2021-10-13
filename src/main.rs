@@ -1,6 +1,6 @@
-use std::f32::consts::PI;
+use std::{f32::consts::PI};
 
-use raytracer::{canvas::Canvas, color::RED, matrix::{Mat4, mat4::{identity, rotate_z}}, ray::Ray, shape::Shape, sphere::Sphere, tuple::{Tuple, point, vector}};
+use raytracer::{canvas::Canvas, color::RED, matrix::{Mat4, mat4::{ identity, rotate_z}}, ray::Ray, shape::Shape, sphere::Sphere, tuple::{Tuple, point}};
 
 #[derive(Debug)]
 struct Projectile {
@@ -101,16 +101,50 @@ fn move_a_point() {
 fn raycast_2d_sphere() {
     // Chapter 05 Challenge:
     // casts rays at a sphere and draws the picture to a canvas.
-    let width = 600usize;
-    let height = 600usize;
-    let mut canvas = Canvas::new(width, height);
-    let radius = width as f32 * 0.375;
+    let canvas_pixels = 100 as usize;
+    
+    let wall_z = 10.0; // unit
+    let wall_size = 7.0; //unit
+    let pixel_size = wall_size  / canvas_pixels as f32;
+    let half = wall_size / 2.0;
+    
+    let mut canvas = Canvas::new(canvas_pixels, canvas_pixels);
+
+    //    let t = mat4::scale(0.5, 1.0, 0.5);
+
+    let t = Mat4::identity().skew(0.5, 0., 0.5, 0., 0., 0.).scale(0.5, 1., 0.5);
 
     let mut s = Sphere::new(); //unit sphere
-    let mut r = Ray::new(point(0.0, 1.0, -5.0), vector(0.0, 1.0, 0.0));
+    s.set_transform(t);
+    let ray_origin = point(0.0, 0.0, -5.0);
 
-    s.set_transform(Mat4::identity().translate(300.0, 300.0, 300.0).scale(width as f32 * 0.375, width as f32 * 0.375, width as f32 * 0.375));
-    let xs = s.intersect(r);
+    // for each row of pixels in  the canvas
+    for y in 0..canvas_pixels -1 {
+        // compute the worl y coordinate (top = +half, bottom= -half)
+        let world_y = half - pixel_size * y as f32;
+        
+        // for each pixel in the row 
+        for x in 0..canvas_pixels - 1 {
+            // compute the worl x coordinate (left = -half, right= half)
+            let world_x = -half + pixel_size * x as f32;
+
+            // describe the point in the wall that the ray will target
+            let position = point(world_x, world_y, wall_z);
+            //println!("{:?}", position);
+
+            let direction = (position - ray_origin).normalize();
+
+            let ray = Ray::new(ray_origin, direction);
+            
+            let xs = s.intersect(ray);
+            
+            if let Some(_) = xs.hit()  {
+                canvas[(x, y)] = RED;
+            }
+        }
+    }
+    canvas.save("2d_red_sphere.png").unwrap();
+
 
 }
 
