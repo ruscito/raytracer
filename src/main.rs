@@ -110,7 +110,7 @@ fn raycast_2d_sphere() {
     
     let mut canvas = Canvas::new(canvas_pixels, canvas_pixels);
 
-    let t = Mat4::identity().skew(0.5, 0., 0.5, 0., 0., 0.).scale(0.5, 1., 0.5);
+    let t = Mat4::identity().scale(1., 0.5, 1.); //.skew(0.5, 0., 0.5, 0., 0., 0.);
 
     let mut s = Sphere::new(); //unit sphere
     s.set_transform(t);
@@ -128,7 +128,6 @@ fn raycast_2d_sphere() {
 
             // describe the point in the wall that the ray will target
             let position = point(world_x, world_y, wall_z);
-            //println!("{:?}", position);
 
             let direction = (position - ray_origin).normalize();
 

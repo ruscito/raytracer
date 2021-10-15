@@ -1,4 +1,6 @@
-use raytracer::{matrix::{Mat4, mat4::*}, ray::Ray, shape::Shape, sphere::Sphere, tuple::{point, vector}};
+use std::f32::consts::PI;
+
+use raytracer::{matrix::{Mat4, mat4::{*, self}}, ray::Ray, shape::Shape, sphere::Sphere, tuple::{point, vector}};
 
 #[test]
 fn ray_intersect() { 
@@ -88,4 +90,56 @@ fn intersecting_traslated_sphere() {
     s.set_transform(translate(5.0, 0.0, 0.0));
     let xs = s.intersect(r);
     assert_eq!(xs.len(), 0);
+}
+
+#[test]
+fn normal_at_point_on_x() {
+    let s= Sphere::new();
+    let n = s.normal_at(&point(1.,0.,0.));
+    assert_eq!(n, vector(1., 0., 0.))
+}
+
+#[test]
+fn normal_at_point_on_y() {
+    let s= Sphere::new();
+    let n = s.normal_at(&point(0.,1.,0.));
+    assert_eq!(n, vector(0., 1., 0.))
+}
+
+#[test]
+fn normal_at_point_on_z() {
+    let s= Sphere::new();
+    let n = s.normal_at(&point(0.,0.,1.));
+    assert_eq!(n, vector(0., 0., 1.))
+}
+
+#[test]
+fn normal_at_nonaxial_point() {
+    let s= Sphere::new();
+    let n = s.normal_at(&point(3.0f32.sqrt()/3.0,3.0f32.sqrt()/3.0,3.0f32.sqrt()/3.0));
+    assert_eq!(n, vector(3.0f32.sqrt()/3.0, 3.0f32.sqrt()/3.0, 3.0f32.sqrt()/3.0))
+}
+
+#[test]
+fn normal_is_normalized_vector() {
+    let s= Sphere::new();
+    let n = s.normal_at(&point(3.0f32.sqrt()/3.0,3.0f32.sqrt()/3.0,3.0f32.sqrt()/3.0));
+    assert_eq!(n, n.normalize());
+}
+
+#[test]
+fn normal_on_a_traslate_sphere() {
+    let mut s = Sphere::new();
+    s.set_transform(mat4::translate(0., 1., 0.));
+    let n = s.normal_at(&point(0., 1.70711, -0.70711));
+    assert_eq!(n, vector(0., 0.7071068, -0.70710677))
+}
+
+#[test]
+fn normal_on_a_transformed_sphere() {
+    let mut s = Sphere::new();
+    let m = Mat4::identity().scale(1., 0.5, 1.).rotate_z(PI/5.0);
+    s.set_transform(m);
+    let n = s.normal_at(&point(0., 2.0f32.sqrt()/2.0, -2.0f32.sqrt()/2.0));
+    assert_eq!(n, vector(0., 0.97014, -0.24254))
 }

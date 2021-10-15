@@ -1,4 +1,4 @@
-use crate::{get_id, intersection::{Intersection, Intersections}, matrix::Mat4, ray::Ray, shape::Shape, tuple::point};
+use crate::{get_id, intersection::{Intersection, Intersections}, matrix::Mat4, ray::Ray, shape::Shape, tuple::{Tuple, point}};
 // `Any` allows us to do dynamic typecasting.
 use std::any::Any;
 
@@ -50,7 +50,6 @@ impl Shape for Sphere {
             return Intersections::new(vec![Intersection { t: t2, object: Box::new(*self)} , Intersection { t: t1, object: Box::new(*self)}]);
         }  
         Intersections::new(vec![Intersection { t: t1, object: Box::new(*self)} , Intersection { t: t2, object: Box::new(*self)}])
-
     }   
 
     fn id(&self) -> usize {
@@ -81,5 +80,16 @@ impl Shape for Sphere {
 
     fn set_transform(&mut self, m: Mat4) {
         self.transform = m;
+    }
+    
+    fn normal_at(&self, pnt:&Tuple) -> Tuple {
+        // convert the point from world space to object space
+        let object_point =  self.transform.inv() * *pnt;
+        // Now I can calculate the object normal 
+        let object_normal = (object_point - point(0., 0., 0.)).normalize();
+        // Now transform the object_normal in world space
+        let mut world_normal = self.transform.inv().transpose() * object_normal;
+        world_normal.w = 0.0;
+        world_normal.normalize()
     }
 }

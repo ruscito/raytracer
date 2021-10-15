@@ -1,4 +1,5 @@
 use crate::matrix::Mat4;
+use crate::tuple::Tuple;
 use crate::{intersection::Intersections, ray::Ray};
 use std::fmt;
 // `Any` allows us to do dynamic typecasting.
@@ -25,6 +26,8 @@ pub trait Shape : fmt::Debug {
     fn get_transform(&self) -> Mat4;
 
     fn set_transform(&mut self, m: Mat4);
+
+    fn normal_at(&self, p:&Tuple) -> Tuple;
 }
 
 impl Clone for ShapeObject {

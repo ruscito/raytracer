@@ -127,5 +127,20 @@ fn cross_product_of_tuples() {
     assert_eq!(b.cross(&a), Tuple::vector(1.0, -2.0, 1.0));
 }
 
+#[test]
+fn reflecting_a_vector_at_45() {
+    let v = Tuple::vector(1.0, -1.0, 0.0);
+    let n = Tuple::vector(0.0, 1.0, 0.0);
+    let r = v.reflect(n);
+    assert_eq!(r, vector(1., 1., 0.));
+}
 
+
+#[test]
+fn reflecting_a_vector_of_slabt_surface() {
+    let v = Tuple::vector(0.0, -1.0, 0.0);
+    let n = Tuple::vector(2.0f32.sqrt()/2.0, 2.0f32.sqrt()/2.0, 0.);
+    let r = v.reflect(n);
+    assert_eq!(r, vector(1., 0., 0.));
+}
 

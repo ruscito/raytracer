@@ -76,6 +76,10 @@ impl Tuple {
             w: 0.0,
         }
     }
+
+    pub fn reflect(&self, normal:Tuple) -> Tuple {
+        *self - normal * 2.0 * self.dot(&normal)
+    }
 }
 
 impl PartialEq for Tuple {
