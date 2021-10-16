@@ -1,11 +1,11 @@
 //use crate::material::Material;
-use crate::tuple::Tuple;
+
+use crate::tuple::{Point, Vector};
 use crate::{intersection::Intersections, ray::Ray};
 use std::fmt;
 // `Any` allows us to do dynamic typecasting.
 use std::any::Any;
 
-pub type ShapeObject = Box<dyn Shape>;
 
 pub trait Shape : fmt::Debug {
     // intesect return None or two values that represent 
@@ -15,7 +15,7 @@ pub trait Shape : fmt::Debug {
     fn id(&self) -> usize;
 
     // I need this because can't implement a clone for a trait object
-    fn clone_box(&self) -> ShapeObject;
+    fn clone_box(&self) -> Box<dyn Shape>;
 
     // An &Any can be cast to a reference to a concrete type.
     fn as_any(&self) -> &dyn Any;
@@ -23,17 +23,17 @@ pub trait Shape : fmt::Debug {
     // Perform the test.
     fn eq_box(&self, other: &dyn Any) -> bool;
 
-    fn normal_at(&self, p:&Tuple) -> Tuple;
+    fn normal_at(&self, p:&Point) -> Vector;
 }
 
-impl Clone for ShapeObject {
+impl Clone for Box<dyn Shape> {
     fn clone(&self) -> Self {
         self.clone_box()
     }
 }
 
-impl PartialEq for ShapeObject {
-    fn eq(&self, other: &ShapeObject) -> bool {
+impl PartialEq for Box<dyn Shape> {
+    fn eq(&self, other: &Box<dyn Shape>) -> bool {
         self.eq_box(other.as_any())
     }
 }

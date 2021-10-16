@@ -1,6 +1,17 @@
 use std::sync::atomic::{AtomicUsize, Ordering};
 
-pub mod tuple;
+pub trait Tuple{}
+
+pub mod tuple {
+    pub use point::Point;
+    pub use vector::Vector;
+
+    pub mod point;
+    pub mod vector;
+}
+
+
+
 pub mod color;
 pub mod canvas;
 pub mod matrix{
@@ -13,13 +24,13 @@ pub mod matrix{
     pub mod mat4;
 }
 
-pub mod shapes {
+pub mod shape {
     pub use sphere::Sphere;
-    
+    pub use shape::Shape;
     pub mod sphere;
+    pub mod shape;
 }
 
-pub mod shape;
 pub mod ray;
 pub mod intersection;
 pub mod light;

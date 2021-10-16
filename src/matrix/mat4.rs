@@ -1,6 +1,6 @@
 use core::panic;
 use std::{convert::TryInto, ops::{Index, IndexMut, Mul}};
-use crate::tuple::Tuple;
+use crate::tuple::*;
 use super::Mat3;
 
 const SIZE: usize = 4;
@@ -206,27 +206,59 @@ impl  Mul<Mat4> for Mat4 {
     }
 }
 
-impl Mul<Tuple> for Mat4 {
-    type Output = Tuple;
-    fn mul(self, rhs: Tuple) -> Self::Output {
+impl Mul<Point> for Mat4 {
+    type Output = Point;
+    fn mul(self, rhs: Point) -> Self::Output {
         // the tuple is one column 4 row 1 col
-        Tuple::new(
+        let mut out = Point::new(
             self[(0, 0)] * rhs.x + 
-                self[(0, 1)] * rhs.y +
-                self[(0, 2)] * rhs.z +
-                self[(0, 3)] * rhs.w,
+            self[(0, 1)] * rhs.y +
+            self[(0, 2)] * rhs.z +
+            self[(0, 3)] * rhs.w,
+        
             self[(1, 0)] * rhs.x + 
-                self[(1, 1)] * rhs.y +
-                self[(1, 2)] * rhs.z +
-                self[(1, 3)] * rhs.w,
+            self[(1, 1)] * rhs.y +
+            self[(1, 2)] * rhs.z +
+            self[(1, 3)] * rhs.w,
+        
             self[(2, 0)] * rhs.x + 
-                self[(2, 1)] * rhs.y +
-                self[(2, 2)] * rhs.z +
-                self[(2, 3)] * rhs.w,
-            self[(3, 0)] * rhs.x + 
-                self[(3, 1)] * rhs.y +
-                self[(3, 2)] * rhs.z +
-                self[(3, 3)] * rhs.w)
+            self[(2, 1)] * rhs.y +
+            self[(2, 2)] * rhs.z +
+            self[(2, 3)] * rhs.w,            
+        );
+        out.w = self[(3, 0)] * rhs.x + 
+            self[(3, 1)] * rhs.y +
+            self[(3, 2)] * rhs.z +
+            self[(3, 3)] * rhs.w;
+        out
+    }
+}
+
+impl Mul<Vector> for Mat4 {
+    type Output = Vector;
+    fn mul(self, rhs: Vector) -> Self::Output {
+        // the tuple is one column 4 row 1 col
+        let mut out = Vector::new(
+            self[(0, 0)] * rhs.x + 
+            self[(0, 1)] * rhs.y +
+            self[(0, 2)] * rhs.z +
+            self[(0, 3)] * rhs.w,
+        
+            self[(1, 0)] * rhs.x + 
+            self[(1, 1)] * rhs.y +
+            self[(1, 2)] * rhs.z +
+            self[(1, 3)] * rhs.w,
+        
+            self[(2, 0)] * rhs.x + 
+            self[(2, 1)] * rhs.y +
+            self[(2, 2)] * rhs.z +
+            self[(2, 3)] * rhs.w,            
+        );
+        out.w = self[(3, 0)] * rhs.x + 
+            self[(3, 1)] * rhs.y +
+            self[(3, 2)] * rhs.z +
+            self[(3, 3)] * rhs.w;
+        out
     }
 }
 

@@ -1,15 +1,17 @@
 use std::ops::Index;
 
-use crate::shape::{ShapeObject};
+use crate::shape::Shape;
+
+
 
 #[derive(Debug, Clone)]
 pub struct Intersection {
     pub t: f32,
-    pub object:  ShapeObject,
+    pub object: Box<dyn Shape>,
 }
 
 impl Intersection {
-    pub fn new(t: f32, object: ShapeObject) -> Self {
+    pub fn new(t: f32, object: Box<dyn Shape>) -> Self {
         Self {
             t,
             object,

@@ -1,10 +1,15 @@
 use std::f32::consts::PI;
 
-use raytracer::{material::Material, matrix::{Mat4, mat4::{*, self}}, ray::Ray, shape::Shape, shapes::Sphere, tuple::{point, vector}};
+use raytracer::material::Material;
+use raytracer::matrix::{Mat4, mat4::{*, self}};
+use raytracer::ray::Ray;
+use raytracer::shape::Shape;
+use raytracer::shape::Sphere;
+use raytracer::tuple::{Point, Vector};
 
 #[test]
 fn ray_intersect() { 
-    let r = Ray::new(point(0.0, 0.0, -5.0), vector(0.0, 0.0, 1.0));
+    let r = Ray::new(Point::new(0.0, 0.0, -5.0), Vector::new(0.0, 0.0, 1.0));
     let s = Sphere::new();
     let xs = s.intersect(r);
     assert_eq!(xs.len(), 2);
@@ -16,7 +21,7 @@ fn ray_intersect() {
 
 #[test]
 fn ray_tangent() { 
-    let r = Ray::new(point(0.0, 1.0, -5.0), vector(0.0, 0.0, 1.0));
+    let r = Ray::new(Point::new(0.0, 1.0, -5.0), Vector::new(0.0, 0.0, 1.0));
     let s = Sphere::new();
     let xs = s.intersect(r);
     assert_eq!(xs.len(), 2);
@@ -26,7 +31,7 @@ fn ray_tangent() {
 
 #[test]
 fn ray_misses_sphere() { 
-    let r = Ray::new(point(0.0, 2.0, -5.0), vector(0.0, 0.0, 1.0));
+    let r = Ray::new(Point::new(0.0, 2.0, -5.0), Vector::new(0.0, 0.0, 1.0));
     let s = Sphere::new();
     let xs = s.intersect(r);
     assert_eq!(xs.len(), 0);   
@@ -34,7 +39,7 @@ fn ray_misses_sphere() {
 
 #[test]
 fn ray_inside_sphere() { 
-    let r = Ray::new(point(0.0, 0.0, 0.0), vector(0.0, 0.0, 1.0));
+    let r = Ray::new(Point::new(0.0, 0.0, 0.0), Vector::new(0.0, 0.0, 1.0));
     let s = Sphere::new();
     let xs = s.intersect(r);
     assert_eq!(xs.len(), 2);
@@ -44,7 +49,7 @@ fn ray_inside_sphere() {
 
 #[test]
 fn sphere_behind_ray() { 
-    let r = Ray::new(point(0.0, 0.0, 5.0), vector(0.0, 0.0, 1.0));
+    let r = Ray::new(Point::new(0.0, 0.0, 5.0), Vector::new(0.0, 0.0, 1.0));
     let s = Sphere::new();
     let xs = s.intersect(r);
     assert_eq!(xs.len(), 2);
@@ -74,7 +79,7 @@ fn changing_sphere_transform() {
 
 #[test]
 fn intersecting_scaled_sphere() {
-    let r = Ray::new(point(0.0, 0.0, -5.0), vector(0.0, 0.0, 1.0));
+    let r = Ray::new(Point::new(0.0, 0.0, -5.0), Vector::new(0.0, 0.0, 1.0));
     let mut s = Sphere::new();
     s.transform = scale(2.0, 2.0, 2.0);
     let xs = s.intersect(r);
@@ -85,7 +90,7 @@ fn intersecting_scaled_sphere() {
 
 #[test]
 fn intersecting_traslated_sphere() {
-    let r = Ray::new(point(0.0, 0.0, -5.0), vector(0.0, 0.0, 1.0));
+    let r = Ray::new(Point::new(0.0, 0.0, -5.0), Vector::new(0.0, 0.0, 1.0));
     let mut s = Sphere::new();
     s.transform = translate(5.0, 0.0, 0.0);
     let xs = s.intersect(r);
@@ -95,35 +100,35 @@ fn intersecting_traslated_sphere() {
 #[test]
 fn normal_at_point_on_x() {
     let s= Sphere::new();
-    let n = s.normal_at(&point(1.,0.,0.));
-    assert_eq!(n, vector(1., 0., 0.))
+    let n = s.normal_at(&Point::new(1.,0.,0.));
+    assert_eq!(n, Vector::new(1., 0., 0.))
 }
 
 #[test]
 fn normal_at_point_on_y() {
     let s= Sphere::new();
-    let n = s.normal_at(&point(0.,1.,0.));
-    assert_eq!(n, vector(0., 1., 0.))
+    let n = s.normal_at(&Point::new(0.,1.,0.));
+    assert_eq!(n, Vector::new(0., 1., 0.))
 }
 
 #[test]
 fn normal_at_point_on_z() {
     let s= Sphere::new();
-    let n = s.normal_at(&point(0.,0.,1.));
-    assert_eq!(n, vector(0., 0., 1.))
+    let n = s.normal_at(&Point::new(0.,0.,1.));
+    assert_eq!(n, Vector::new(0., 0., 1.))
 }
 
 #[test]
 fn normal_at_nonaxial_point() {
     let s= Sphere::new();
-    let n = s.normal_at(&point(3.0f32.sqrt()/3.0,3.0f32.sqrt()/3.0,3.0f32.sqrt()/3.0));
-    assert_eq!(n, vector(3.0f32.sqrt()/3.0, 3.0f32.sqrt()/3.0, 3.0f32.sqrt()/3.0))
+    let n = s.normal_at(&Point::new(3.0f32.sqrt()/3.0,3.0f32.sqrt()/3.0,3.0f32.sqrt()/3.0));
+    assert_eq!(n, Vector::new(3.0f32.sqrt()/3.0, 3.0f32.sqrt()/3.0, 3.0f32.sqrt()/3.0))
 }
 
 #[test]
 fn normal_is_normalized_vector() {
     let s= Sphere::new();
-    let n = s.normal_at(&point(3.0f32.sqrt()/3.0,3.0f32.sqrt()/3.0,3.0f32.sqrt()/3.0));
+    let n = s.normal_at(&Point::new(3.0f32.sqrt()/3.0,3.0f32.sqrt()/3.0,3.0f32.sqrt()/3.0));
     assert_eq!(n, n.normalize());
 }
 
@@ -131,8 +136,8 @@ fn normal_is_normalized_vector() {
 fn normal_on_a_traslate_sphere() {
     let mut s = Sphere::new();
     s.transform = mat4::translate(0., 1., 0.);
-    let n = s.normal_at(&point(0., 1.70711, -0.70711));
-    assert_eq!(n, vector(0., 0.7071068, -0.70710677))
+    let n = s.normal_at(&Point::new(0., 1.70711, -0.70711));
+    assert_eq!(n, Vector::new(0., 0.7071068, -0.70710677))
 }
 
 #[test]
@@ -140,8 +145,8 @@ fn normal_on_a_transformed_sphere() {
     let mut s = Sphere::new();
     let m = Mat4::identity().scale(1., 0.5, 1.).rotate_z(PI/5.0);
     s.transform = m;
-    let n = s.normal_at(&point(0., 2.0f32.sqrt()/2.0, -2.0f32.sqrt()/2.0));
-    assert_eq!(n, vector(0., 0.97014, -0.24254))
+    let n = s.normal_at(&Point::new(0., 2.0f32.sqrt()/2.0, -2.0f32.sqrt()/2.0));
+    assert_eq!(n, Vector::new(0., 0.97014, -0.24254))
 }
 
 #[test]

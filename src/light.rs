@@ -1,13 +1,14 @@
-use crate::{color::Color, tuple::Tuple};
+use crate::color::Color;
+use crate::tuple::Point;
 
 #[derive(Debug, Copy, Clone)]
 pub struct Light {
-    pub position: Tuple,
+    pub position: Point,
     pub intensity: Color,
 }
 
 impl Light {
-    pub fn new(position: Tuple, intensity: Color) -> Self {
+    pub fn new(position: Point, intensity: Color) -> Self {
         Self { position, intensity}
     }
 }

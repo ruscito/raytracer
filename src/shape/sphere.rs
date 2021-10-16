@@ -4,12 +4,12 @@ use crate::intersection::{Intersection, Intersections};
 use crate::material::Material; 
 use crate::matrix::Mat4; 
 use crate::ray::Ray; 
-use crate::tuple::{Tuple, point};
+use crate::tuple::Point;
+use crate::tuple::Vector;
 
 // `Any` allows us to do dynamic typecasting.
 use std::any::Any;
-
-use crate::shape::Shape;
+use super::shape::Shape;
 
 #[derive(Debug, Copy, Clone)]
 pub struct Sphere {
@@ -40,11 +40,11 @@ impl Shape for Sphere {
 
         let ray = ray.transform(&self.transform.inv());
 
-        let sphere_to_ray = ray.origin - point(0.0, 0.0, 0.0);
+        let sphere_to_ray = ray.origin - Point::new(0.0, 0.0, 0.0);
 
         let a = ray.direction.dot(&ray.direction);
         
-        let b = 2.0 * ray.direction.dot(&sphere_to_ray);
+        let b = 2.0 * ray.direction.dot(&sphere_to_ray.into());
 
         let c = sphere_to_ray.dot(&sphere_to_ray) - 1.0 ;
         
@@ -85,11 +85,11 @@ impl Shape for Sphere {
         } 
     }
     
-    fn normal_at(&self, pnt:&Tuple) -> Tuple {
+    fn normal_at(&self, pnt:&Point) -> Vector {
         // convert the point from world space to object space
         let object_point =  self.transform.inv() * *pnt;
         // Now I can calculate the object normal 
-        let object_normal = (object_point - point(0., 0., 0.)).normalize();
+        let object_normal = object_point - Point::new(0., 0., 0.);
         // Now transform the object_normal in world space
         let mut world_normal = self.transform.inv().transpose() * object_normal;
         world_normal.w = 0.0;

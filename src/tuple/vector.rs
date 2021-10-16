@@ -1,43 +1,28 @@
 use std::ops::{Add, Div, Mul, Neg, Sub};
 
+use crate::{Tuple, f32eq};
+use crate::tuple::Point;
+
 #[derive(Debug, Clone, Copy)]
-pub struct Tuple {
+pub struct Vector {
     pub x: f32,
     pub y: f32,
     pub z: f32,
     pub w: f32,
 }
 
-impl Tuple {
-    pub fn new(x: f32, y: f32, z: f32, w: f32) -> Self {
-        Tuple {x, y, z, w}
-    }
+impl Tuple for Vector{}
 
-    pub fn is_point(self) -> bool {
-        self.w == 1.0
-    }
-
-    pub fn is_vector(self) -> bool {
-        self.w == 0.0
-    }
-
-    pub fn point(x: f32, y: f32, z: f32,) -> Self {
-        Self::new(x, y, z, 1.0)
-    }
-
-    pub fn vector(x: f32, y: f32, z: f32,) -> Self {
-        Self::new(x, y, z, 0.0)
-    }
-
-    pub fn zero_vector() -> Self {
-        Self::new(0.0, 0.0, 0.0, 0.0)
+impl Vector {
+    pub fn new(x: f32, y: f32, z: f32) -> Self {
+        Self {x, y, z, w:0.0}
     }
 
     pub fn magnitude(&self) -> f32 {
         (self.x.powi(2) + self.y.powi(2) + self.z.powi(2)).sqrt()
     }
 
-    pub fn distance(&self, other:&Tuple) -> f32 {
+    pub fn distance(&self, other:&Vector) -> f32 {
         ((other.x -self.x).powf(2.0) 
             + (other.y -self.y).powf(2.0)
             + (other.z -self.z).powf(2.0) 
@@ -61,14 +46,14 @@ impl Tuple {
             self.w = self.w / magnitude;
     }
 
-    pub fn dot(&self, other: &Tuple) -> f32 {
+    pub fn dot(&self, other: &Vector) -> f32 {
         self.x * other.x +
         self.y * other.y +
         self.z * other.z +
         self.w * other.w 
     }
 
-    pub fn cross(&self, other: &Self) -> Tuple {
+    pub fn cross(&self, other: &Self) -> Vector {
         Self {
             x: (self.y * other.z) - (self.z * other.y),
             y: (self.z * other.x) - (self.x * other.z),
@@ -77,21 +62,21 @@ impl Tuple {
         }
     }
 
-    pub fn reflect(&self, normal:Tuple) -> Tuple {
+    pub fn reflect(&self, normal:Vector) -> Vector {
         *self - normal * 2.0 * self.dot(&normal)
     }
 }
 
-impl PartialEq for Tuple {
-    fn eq (&self, other: &Tuple) -> bool {
-        super::f32eq(self.x, other.x) &&
-        super::f32eq(self.y, other.y) &&
-        super::f32eq(self.z, other.z) &&
-        super::f32eq(self.w, other.w)
+impl PartialEq for Vector {
+    fn eq (&self, other: &Vector) -> bool {
+        f32eq(self.x, other.x) &&
+        f32eq(self.y, other.y) &&
+        f32eq(self.z, other.z) &&
+        f32eq(self.w, other.w)
     }
 }
 
-impl Add <Tuple> for Tuple {
+impl Add <Vector> for Vector {
     type Output = Self;
     fn add(self, other: Self) -> Self {
         Self {
@@ -103,7 +88,19 @@ impl Add <Tuple> for Tuple {
     }
 }
 
-impl Sub <Tuple> for Tuple {
+impl Add <Point> for Vector {
+    type Output = Point;
+    fn add(self, other: Point) -> Point {
+        Point {
+            x: self.x + other.x,
+            y: self.y + other.y,
+            z: self.z + other.z,
+            w: self.w + other.w,
+        }
+    }
+}
+
+impl Sub <Vector> for Vector {
     type Output = Self;
     fn sub(self, other: Self) -> Self {
         Self {
@@ -115,47 +112,49 @@ impl Sub <Tuple> for Tuple {
     }
 }
 
-impl Neg for  Tuple {
+impl Neg for  Vector {
     type Output = Self;
     fn neg(self) -> Self {
         Self {
             x: -self.x,
             y: -self.y,
             z: -self.z,
-            w: -self.w,
+            w: 0.0,
         }
     }
 }
 
-impl Div <f32> for Tuple {
-    type Output = Tuple;
+impl Div <f32> for Vector {
+    type Output = Vector;
     fn div(self, rhs: f32) -> Self::Output {
         Self{
             x: self.x / rhs,
             y: self.y / rhs,
             z: self.z / rhs,
-            w: self.w / rhs,
+            w: 0.0,
         }        
     }
 }
 
-impl Mul <f32> for Tuple {
-    type Output = Tuple;
+impl Mul <f32> for Vector {
+    type Output = Vector;
     fn mul(self, rhs: f32) -> Self::Output {
         Self{
             x: self.x * rhs,
             y: self.y * rhs,
             z: self.z * rhs,
-            w: self.w * rhs,
+            w: 0.0,
         }        
     }
 }
 
-
-pub fn point(x: f32, y: f32, z: f32,) -> Tuple {
-    Tuple::new(x, y, z, 1.0)
-}
-
-pub fn vector(x: f32, y: f32, z: f32,) -> Tuple {
-    Tuple::new(x, y, z, 0.0)
+impl From <Point> for Vector {
+    fn from(p:Point) -> Self {
+        Self {
+            x: p.x,
+            y: p.y,
+            z: p.z,
+            w: 0.0
+        }
+    }
 }

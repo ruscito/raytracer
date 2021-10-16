@@ -1,16 +1,22 @@
 use std::{f32::consts::PI};
 
-use raytracer::{canvas::Canvas, color::RED, matrix::{Mat4, mat4::{ identity, rotate_z}}, ray::Ray, shape::Shape, shapes::Sphere, tuple::{Tuple, point}};
+use raytracer::canvas::Canvas; 
+use raytracer::color::RED; 
+use raytracer::matrix::{Mat4, mat4::{ identity, rotate_z}}; 
+use raytracer::ray::Ray;
+use raytracer:: shape::Shape; 
+use raytracer::shape::Sphere;
+use raytracer:: tuple::{Point, Vector};
 
 #[derive(Debug)]
 struct Projectile {
-    position: Tuple,
-    velocity: Tuple,
+    position: Point,
+    velocity: Vector,
 }
 
 struct Environment {
-    gravity: Tuple,
-    wind: Tuple,
+    gravity: Vector,
+    wind: Vector,
 }
 
 fn tick(env: &Environment, proj: Projectile) -> Projectile {
@@ -22,13 +28,13 @@ fn tick(env: &Environment, proj: Projectile) -> Projectile {
 
 fn projectile() {
     let mut p = Projectile {
-        position: Tuple::point(0.0, 1.0, 0.0),
-        velocity: Tuple::vector(1.0, 1.8, 0.0).normalize() * 11.65,
+        position: Point::new(0.0, 1.0, 0.0),
+        velocity: Vector::new(1.0, 1.8, 0.0).normalize() * 11.65,
     };
 
     let e = Environment {
-        gravity: Tuple::vector(0.0, -0.1, 0.0),
-        wind: Tuple::vector(-0.01, 0.0, 0.0),
+        gravity: Vector::new(0.0, -0.1, 0.0),
+        wind: Vector::new(-0.01, 0.0, 0.0),
     };
 
     let mut cv = Canvas::new(950, 550);
@@ -51,10 +57,10 @@ fn clock() {
     let radius = width as f32 * 0.375;
 
     // translate P(0,0,0) origin to the center of the canvas
-    let clock_centered_orgin = identity().translate(300.0, 300.0, 0.0) * point(0.0, 0.0, 0.0);
+    let clock_centered_orgin = identity().translate(300.0, 300.0, 0.0) * Point::new(0.0, 0.0, 0.0);
 
     // In case of rotation around z axis 12 o'clock is on the y axis
-    let clock_at_12 = point(0.0, 1.0, 0.0);
+    let clock_at_12 = Point::new(0.0, 1.0, 0.0);
 
     // 2pi radians in a circle so each hour is rotated 2PI/12 = PI/6
     // all the point ar calculated with center being at p(0,0,0)
@@ -79,8 +85,8 @@ fn clock() {
 fn move_a_point() {
     let mut cv = Canvas::new(200, 200);
 
-    let start_point = point(100.0, 100.0, 0.0);
-    let end_point = point(150.0, 130.0, 0.0);
+    let start_point = Point::new(100.0, 100.0, 0.0);
+    let end_point = Point::new(150.0, 130.0, 0.0);
     let speed = 0.01;
 
     let direction = end_point - start_point;
@@ -110,11 +116,11 @@ fn raycast_2d_sphere() {
     
     let mut canvas = Canvas::new(canvas_pixels, canvas_pixels);
 
-    let t = Mat4::identity().scale(1., 0.5, 1.); //.skew(0.5, 0., 0.5, 0., 0., 0.);
+    let t = Mat4::identity().scale(1., 0.5, 1.).skew(0.5, 0., 0.5, 0., 0., 0.);
 
     let mut s = Sphere::new(); //unit sphere
     s.transform = t;
-    let ray_origin = point(0.0, 0.0, -5.0);
+    let ray_origin = Point::new(0.0, 0.0, -5.0);
 
     // for each row of pixels in  the canvas
     for y in 0..canvas_pixels -1 {
@@ -127,11 +133,11 @@ fn raycast_2d_sphere() {
             let world_x = -half + pixel_size * x as f32;
 
             // describe the point in the wall that the ray will target
-            let position = point(world_x, world_y, wall_z);
+            let position = Point::new(world_x, world_y, wall_z);
 
             let direction = (position - ray_origin).normalize();
 
-            let ray = Ray::new(ray_origin, direction);
+            let ray = Ray::new(ray_origin, direction.into());
             
             let xs = s.intersect(ray);
             
