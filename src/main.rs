@@ -1,6 +1,6 @@
 use std::{f32::consts::PI};
 
-use raytracer::{canvas::Canvas, color::RED, matrix::{Mat4, mat4::{ identity, rotate_z}}, ray::Ray, shape::Shape, sphere::Sphere, tuple::{Tuple, point}};
+use raytracer::{canvas::Canvas, color::RED, matrix::{Mat4, mat4::{ identity, rotate_z}}, ray::Ray, shape::Shape, shapes::Sphere, tuple::{Tuple, point}};
 
 #[derive(Debug)]
 struct Projectile {
@@ -113,7 +113,7 @@ fn raycast_2d_sphere() {
     let t = Mat4::identity().scale(1., 0.5, 1.); //.skew(0.5, 0., 0.5, 0., 0., 0.);
 
     let mut s = Sphere::new(); //unit sphere
-    s.set_transform(t);
+    s.transform = t;
     let ray_origin = point(0.0, 0.0, -5.0);
 
     // for each row of pixels in  the canvas

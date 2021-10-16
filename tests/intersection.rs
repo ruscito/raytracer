@@ -1,4 +1,4 @@
-use raytracer::{intersection::{Intersection, Intersections}, shape::Shape, sphere::Sphere};
+use raytracer::{intersection::{Intersection, Intersections}, shape::Shape, shapes::Sphere};
 
 #[test]
 fn create_intersection() {

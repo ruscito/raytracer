@@ -1,11 +1,21 @@
-use crate::{get_id, intersection::{Intersection, Intersections}, matrix::Mat4, ray::Ray, shape::Shape, tuple::{Tuple, point}};
+use crate::get_id; 
+//use crate::shape::Shape; 
+use crate::intersection::{Intersection, Intersections}; 
+use crate::material::Material; 
+use crate::matrix::Mat4; 
+use crate::ray::Ray; 
+use crate::tuple::{Tuple, point};
+
 // `Any` allows us to do dynamic typecasting.
 use std::any::Any;
 
+use crate::shape::Shape;
+
 #[derive(Debug, Copy, Clone)]
 pub struct Sphere {
-    id: usize,
-    transform: Mat4,
+    pub id: usize,
+    pub transform: Mat4,
+    pub material: Material,
 }
 
 impl Sphere {
@@ -13,6 +23,7 @@ impl Sphere {
         Self {
             id: get_id(),
             transform: Mat4::identity(),
+            material: Material::new(),
         }
     }
 }
@@ -72,14 +83,6 @@ impl Shape for Sphere {
             Some(s) => self.id == s.id,
             _ => false
         } 
-    }
-
-    fn get_transform(&self) -> Mat4 {
-        self.transform.clone()
-    }
-
-    fn set_transform(&mut self, m: Mat4) {
-        self.transform = m;
     }
     
     fn normal_at(&self, pnt:&Tuple) -> Tuple {

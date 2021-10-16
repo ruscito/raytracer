@@ -4,18 +4,26 @@ pub mod tuple;
 pub mod color;
 pub mod canvas;
 pub mod matrix{
-    pub use mat2::Mat2 as Mat2;
-    pub use mat3::Mat3 as Mat3;
-    pub use mat4::Mat4 as Mat4;
+    pub use mat2::Mat2;
+    pub use mat3::Mat3;
+    pub use mat4::Mat4;
 
     pub mod mat2;
     pub mod mat3;
     pub mod mat4;
 }
-pub mod ray;
-pub mod sphere;
+
+pub mod shapes {
+    pub use sphere::Sphere;
+    
+    pub mod sphere;
+}
+
 pub mod shape;
+pub mod ray;
 pub mod intersection;
+pub mod light;
+pub mod material;
 
 pub const EPSILON: f32 = 0.00001;
 

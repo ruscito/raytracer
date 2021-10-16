@@ -1,4 +1,4 @@
-use crate::matrix::Mat4;
+//use crate::material::Material;
 use crate::tuple::Tuple;
 use crate::{intersection::Intersections, ray::Ray};
 use std::fmt;
@@ -22,10 +22,6 @@ pub trait Shape : fmt::Debug {
 
     // Perform the test.
     fn eq_box(&self, other: &dyn Any) -> bool;
-
-    fn get_transform(&self) -> Mat4;
-
-    fn set_transform(&mut self, m: Mat4);
 
     fn normal_at(&self, p:&Tuple) -> Tuple;
 }
