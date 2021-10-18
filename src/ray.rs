@@ -1,8 +1,7 @@
 use crate::{matrix::Mat4, tuple::{Point, Vector}};
 
-// A ray is composed by an origin and
-// a direction. This direction vector can be the speed
-
+/// A ray has a starting point called [origin: Point] and a [direction: Vector] 
+/// which it says where the ray point to.
 #[derive(Debug, Copy, Clone)]
 pub struct Ray {
     pub origin: Point,
@@ -17,16 +16,21 @@ impl Ray {
         }
     }
 
-    pub fn position(&self, t: f32) -> Point {
+    /// This method return a [Point] at the given distance [distance: f32]
+    /// along the ray. It multiplays the ray's direction by the distance to 
+    /// find the total distance travled, and add that to the ray's origin
+    pub fn position(&self, distance: f32) -> Point {
         // calculate the position of the ray at a distance
         // of t along the line 
-        self.origin + self.direction * t
+        self.origin + self.direction * distance
     }
 
-    pub fn transform(&self, m: &Mat4) -> Ray {
+    /// This function applies the given [tm: Mat4] transformation matrix to 
+    /// to the ray. It return a new [Ray]
+    pub fn transform(&self, tm: &Mat4) -> Ray {
         Self {
-            origin: *m * self.origin,
-            direction: *m * self.direction,
+            origin: *tm * self.origin,
+            direction: *tm * self.direction,
         }
     }
 }

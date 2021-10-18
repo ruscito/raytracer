@@ -18,14 +18,14 @@ impl Canvas {
         }
     }
     
-    fn _pixel_idx(&self, x: usize, y: usize) -> usize {
+    fn _pixel_idx(&self, col: usize, row: usize) -> usize {
         // Striding -encoding from matrix to a vector-
         // use row-first encoding; Each row of the grid will be stored
         // toghether, in x order. The next set of entries will contain
         // the second row and so on. A 5X2 will be stored as  
         // 0, 1, 2, 3, 4
         // 5, 6, 7, 8, 9
-        (y * self.width) + x
+        (row * self.width) + col
     }
 
     pub fn backgound(&mut self, color: Color){
@@ -60,104 +60,17 @@ impl Canvas {
 // https://stackoverflow.com/questions/33770989/implementing-the-index-operator-for-matrices-with-multiple-parameters
 impl Index<(usize, usize)> for  Canvas {
     type Output = Color;
-    fn index(&self, (row, col):(usize, usize)) -> &Self::Output {
-        let row = (self.height - row).clamp(0, self.height -1); 
-        let col = min(self.width - 1, col); 
-        debug_assert!(col<=self.width);
-        debug_assert!(row<=self.height);
-       
+    fn index(&self, (x_col, y_row):(usize, usize)) -> &Self::Output {
+        let row = min(self.height -1, y_row);
+        let col = min(self.width - 1, x_col);        
         &self.pixels[(row * self.width) + col]
     }    
 }
 
 impl IndexMut<(usize, usize)> for  Canvas {
-    fn index_mut(&mut self, (row, col):(usize, usize)) -> &mut Self::Output {
-        let row = min(self.height-1,self.height - row.clamp(0,  self.height));
-        let col = min(self.width - 1, col); 
-        debug_assert!(col<=self.width);
-        debug_assert!(row<=self.height);
+    fn index_mut(&mut self, (x_col, y_row):(usize, usize)) -> &mut Self::Output {
+        let row = min(self.height -1, y_row);
+        let col = min(self.width - 1, x_col); 
         &mut self.pixels[(row * self.width) + col]
     }    
 }
-
-impl Index<(f32, f32)> for  Canvas {
-    type Output = Color;
-    fn index(&self, (xf, yf):(f32, f32)) -> &Self::Output {
-        let x: usize;
-        let y: usize;
-        if xf < 0.0 {
-            x = 0;
-        } else {
-            x = xf as usize;
-        }
-
-        if yf < 0.0 {
-            y = 0;
-        } else {
-            y = xf as usize;
-        }
-        
-        &self[(x, y)]
-    }    
-}
-
-impl IndexMut<(f32, f32)> for  Canvas {
-    fn index_mut(&mut self, (xf, yf):(f32, f32)) -> &mut Self::Output {
-        let x: usize;
-        let y: usize;
-        if xf < 0.0 {
-            x = 0;
-        } else {
-            x = xf as usize;
-        }
-
-        if yf < 0.0 {
-            y = 0;
-        } else {
-            y = yf as usize;
-        }
-        &mut self[(x, y)]
-    }    
-}
-
-impl Index<(f64, f64)> for  Canvas {
-    type Output = Color;
-    fn index(&self, (xf, yf):(f64, f64)) -> &Self::Output {
-        let x: usize;
-        let y: usize;
-        if xf < 0.0 {
-            x = 0;
-        } else {
-            x = xf as usize;
-        }
-
-        if yf < 0.0 {
-            y = 0;
-        } else {
-            y = xf as usize;
-        }
-        
-        &self[(x, y)]
-    }    
-}
-
-impl IndexMut<(f64, f64)> for  Canvas {
-    fn index_mut(&mut self, (xf, yf):(f64, f64)) -> &mut Self::Output {
-        let x: usize;
-        let y: usize;
-        if xf < 0.0 {
-            x = 0;
-        } else {
-            x = xf as usize;
-        }
-
-        if yf < 0.0 {
-            y = 0;
-        } else {
-            y = yf as usize;
-        }
-        
-        &mut self[(x, y)]
-    }    
-}
-

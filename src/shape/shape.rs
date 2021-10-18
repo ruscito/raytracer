@@ -1,5 +1,6 @@
 //use crate::material::Material;
 
+use crate::material::Material;
 use crate::tuple::{Point, Vector};
 use crate::{intersection::Intersections, ray::Ray};
 use std::fmt;
@@ -8,8 +9,9 @@ use std::any::Any;
 
 
 pub trait Shape : fmt::Debug {
-    // intesect return None or two values that represent 
-    // respectively number of units away from the ray's origin
+    /// It return any Intersections that occured 
+    /// between the shape and the ray provided as
+    /// argument
     fn intersect(&self, ray: Ray) -> Intersections;
 
     fn id(&self) -> usize;
@@ -23,7 +25,12 @@ pub trait Shape : fmt::Debug {
     // Perform the test.
     fn eq_box(&self, other: &dyn Any) -> bool;
 
-    fn normal_at(&self, p:&Point) -> Vector;
+    /// Return the normal vector from the shape
+    /// for the given point
+    fn normal_at(&self, p:Point) -> Vector;
+
+    /// Return shape's material
+    fn material(&self) ->Material;
 }
 
 impl Clone for Box<dyn Shape> {

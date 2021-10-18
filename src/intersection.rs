@@ -3,7 +3,10 @@ use std::ops::Index;
 use crate::shape::Shape;
 
 
-
+/// The type contains the value [t: f32] of the intersection
+/// and the [object: <dyn shape>] that was intersect by a ray. The value
+/// of the intersection represent the distance in unit from the origin of the ray
+/// to the point of intersection with the shape
 #[derive(Debug, Clone)]
 pub struct Intersection {
     pub t: f32,
@@ -26,7 +29,10 @@ impl PartialEq for Intersection {
     }
 }
 
-#[derive(Debug)]
+
+
+/// The type contains a list [xs: vec<Intersection>] of intersections. 
+#[derive(Debug, Clone)]
 pub struct Intersections {
     pub xs: Vec<Intersection>,
 }
@@ -38,10 +44,13 @@ impl Intersections {
         out
     }
 
+    /// It returns the number of intersections 
     pub fn len(&self) -> usize {
         self.xs.len()
     }
-
+    /// it return the visible intersection from the ray origin. The [hit] will 
+    /// always be the intersection with the lowest non negative [t: f32] value.
+    /// The method return [None] if not intersections
     pub fn hit(&self) -> Option<Intersection> {
         for i in self.xs.iter() {
             if i.t > 0.0 {

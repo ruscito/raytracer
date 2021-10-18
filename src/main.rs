@@ -1,13 +1,16 @@
+use raytracer::canvas::Canvas; 
+use raytracer::color::Color; 
+use raytracer::color::RED;
+use raytracer::light::Light;
+use raytracer::matrix::Mat4;
+use raytracer::ray::Ray;
+use raytracer::shape::Shape; 
+use raytracer::shape::Sphere;
+use raytracer::tuple::*;
+use raytracer::matrix::mat4::{identity, rotate_z};
 use std::{f32::consts::PI};
 
-use raytracer::canvas::Canvas; 
-use raytracer::color::RED; 
-use raytracer::matrix::{Mat4, mat4::{ identity, rotate_z}}; 
-use raytracer::ray::Ray;
-use raytracer:: shape::Shape; 
-use raytracer::shape::Sphere;
-use raytracer:: tuple::{Point, Vector};
-
+//use std::time;
 #[derive(Debug)]
 struct Projectile {
     position: Point,
@@ -25,7 +28,6 @@ fn tick(env: &Environment, proj: Projectile) -> Projectile {
         velocity: proj.velocity + env.gravity + env.wind,
     }
 }
-
 fn projectile() {
     let mut p = Projectile {
         position: Point::new(0.0, 1.0, 0.0),
@@ -41,11 +43,12 @@ fn projectile() {
 
     while p.position.y > 0.0 {
         p = tick(&e, p);
-        cv[(p.position.y, p.position.x)] = RED;
+        cv[(p.position.x as usize, (550 -p.position.y as usize))] = RED;
     }
 
     cv.save("projectile.png").unwrap();
 }
+
 
 fn clock() {
     // Chapter 04 challenge:
@@ -76,7 +79,7 @@ fn clock() {
         position.x = position.x + clock_centered_orgin.x;
         position.y = position.y + clock_centered_orgin.y;
 
-        canvas[(position.y, position.x)] = RED;
+        canvas[(position.x as usize, height - position.y as usize)] = RED;
     }
 
     canvas.save("clock.png").unwrap();
@@ -98,7 +101,7 @@ fn move_a_point() {
     println!("Start distance ={}", distance);
 
     while position.distance(&start_point) <= start_point.distance(&end_point) {
-        cv[(position.y, position.x)] = RED;
+        cv[(position.x as usize, 200usize - position.y as usize)] = RED;
         position = position + velocity;
     }
     cv.save("move_a_point.png").unwrap();
@@ -119,7 +122,7 @@ fn raycast_2d_sphere() {
     let t = Mat4::identity().scale(1., 0.5, 1.).skew(0.5, 0., 0.5, 0., 0., 0.);
 
     let mut s = Sphere::new(); //unit sphere
-    s.transform = t;
+    s.set_transform(t);
     let ray_origin = Point::new(0.0, 0.0, -5.0);
 
     // for each row of pixels in  the canvas
@@ -147,8 +150,53 @@ fn raycast_2d_sphere() {
         }
     }
     canvas.save("2d_red_sphere.png").unwrap();
+}
 
 
+fn raycast_3d_sphere() {
+    // Chapter 06 Challenge:
+    // casts rays at a sphere and draws the picture to a canvas.
+    let canvas_pixels = 1000 as usize;
+    let wall_size = 7 as usize; //unit
+    let ray_origin = Point::new(0.0, 0.0, -5.0);
+    let wall_z = 10.0; // unit
+    let pixel_size = wall_size as f32 / canvas_pixels as f32;
+    let half = wall_size as f32 / 2.0;
+    
+    let mut canvas = Canvas::new(canvas_pixels, canvas_pixels);
+    let mut s = Sphere::new(); //unit sphere
+    s.material.color = Color::new(1.0, 0.2, 1.0);
+    
+    
+    let light_position = Point::new(-10.0, 10.0, -10.0);
+    let light_color = Color::new(1.0, 1.0, 1.0);
+    let light = Light::new(light_position, light_color);
+    
+    // for each row of pixels in  the canvas
+    for y in 0..canvas_pixels {
+        // compute the worl y coordinate (top = +half, bottom= -half)
+        let world_y = half - pixel_size * (y as f32);
+        // for each pixel in the row 
+        for x in 0..canvas_pixels  {
+            // compute the worl x coordinate (left = -half, right= half)
+            let world_x = -half + pixel_size * (x as f32);
+            
+            // describe the point in the wall that the ray will target
+            let position = Point::new(world_x, world_y, wall_z);
+            
+            let ray = Ray::new(ray_origin, (position - ray_origin).normalize());
+            let xs = s.intersect(ray);
+            if let Some(hit) = xs.hit()  {
+                //let start = time::Instant::now();       
+                let point = ray.position(hit.t);
+                let normal = hit.object.normal_at(point);
+                let eye= - ray.direction;
+                canvas[(x, y)] = hit.object.material().lighting(light, point, eye, normal);
+                //println!("{} elpased.", start.elapsed().as_micros());
+            }
+        }
+    }
+    canvas.save("3d_red_sphere.png").unwrap();
 }
 
 fn main() {
@@ -156,4 +204,5 @@ fn main() {
     projectile();
     clock();
     raycast_2d_sphere();
+    raycast_3d_sphere();
 }
