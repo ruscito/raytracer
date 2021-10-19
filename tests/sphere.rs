@@ -153,7 +153,7 @@ fn normal_on_a_transformed_sphere() {
 fn sphere_default_material() {
     let s = Sphere::new();
     let m = Material::new();
-    assert_eq!(s.material, m);
+    assert_eq!(s.material(), m);
 }
 
 #[test]
@@ -161,6 +161,6 @@ fn sphere_assign_material() {
     let mut s = Sphere::new();
     let mut m = Material::new();
     m.ambient = 1.0;
-    s.material = m;
-    assert_eq!(s.material, m);
+    s.set_material(m);
+    assert_eq!(s.material(), m);
 }

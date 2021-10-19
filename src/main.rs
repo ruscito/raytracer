@@ -28,6 +28,7 @@ fn tick(env: &Environment, proj: Projectile) -> Projectile {
         velocity: proj.velocity + env.gravity + env.wind,
     }
 }
+
 fn projectile() {
     let mut p = Projectile {
         position: Point::new(0.0, 1.0, 0.0),
@@ -48,7 +49,6 @@ fn projectile() {
 
     cv.save("projectile.png").unwrap();
 }
-
 
 fn clock() {
     // Chapter 04 challenge:
@@ -152,7 +152,6 @@ fn raycast_2d_sphere() {
     canvas.save("2d_red_sphere.png").unwrap();
 }
 
-
 fn raycast_3d_sphere() {
     // Chapter 06 Challenge:
     // casts rays at a sphere and draws the picture to a canvas.
@@ -165,7 +164,9 @@ fn raycast_3d_sphere() {
     
     let mut canvas = Canvas::new(canvas_pixels, canvas_pixels);
     let mut s = Sphere::new(); //unit sphere
-    s.material.color = Color::new(1.0, 0.2, 1.0);
+    let t = Mat4::identity().scale(0.5, 1.0, 0.5).skew(0.5, 0., 0.0, 0., 0., 0.).rotate_x(PI/2.0);
+    s.set_transform(t);
+    s.material().color = Color::new(1.0, 0.2, 1.0);
     
     
     let light_position = Point::new(-10.0, 10.0, -10.0);
@@ -200,9 +201,9 @@ fn raycast_3d_sphere() {
 }
 
 fn main() {
-    move_a_point();
-    projectile();
-    clock();
-    raycast_2d_sphere();
+    //move_a_point();
+    //projectile();
+    //clock();
+    //raycast_2d_sphere();
     raycast_3d_sphere();
 }

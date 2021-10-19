@@ -1,5 +1,4 @@
 //use std::time;
-
 use crate::get_id; 
 use crate::intersection::{Intersection, Intersections}; 
 use crate::material::Material; 
@@ -17,11 +16,11 @@ use super::shape::Shape;
 /// a default [material: Material]
 #[derive(Debug, Copy, Clone)]
 pub struct Sphere {
-    pub id: usize,
+    id: usize,
     transform: Mat4,
     inverse_transform: Mat4,
     transpose_inverse_transform: Mat4,
-    pub material: Material,
+    material: Material,
 }
 
 impl Sphere {
@@ -41,9 +40,9 @@ impl Sphere {
         self.transpose_inverse_transform = transform.inv().transpose();
     }
 
-    pub fn transform(&self) -> Mat4 {
-        self.transform
-    }
+    pub fn set_material(&mut self, material: Material) {
+        self.material = material;
+    } 
 }
 
 impl PartialEq for Sphere {
@@ -112,6 +111,10 @@ impl Shape for Sphere {
     }
 
     fn material(&self) -> Material {
-        self.material.clone()
+        self.material
+    }
+
+    fn transform(&self) -> Mat4 {
+        self.transform
     }
 }

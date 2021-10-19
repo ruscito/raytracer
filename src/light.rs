@@ -4,7 +4,7 @@ use crate::tuple::Point;
 /// A point light: a light source with no size existing at single 
 /// [position: Point] in space. It is also defined by its [intensity: Color] 
 /// which describes how bright is the color of the light source
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, PartialEq)]
 pub struct Light {
     pub position: Point,
     pub intensity: Color,
