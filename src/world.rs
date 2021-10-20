@@ -1,7 +1,10 @@
 use crate::color::{Color, WHITE};
+use crate::comps::Comps;
+use crate::intersection::{Intersection, Intersections};
 use crate::light::Light; 
 use crate::material::Material;
 use crate::matrix::Mat4;
+use crate::ray::Ray;
 use crate::shape::{Shape, Sphere};
 use crate::tuple::Point;
 
@@ -16,6 +19,23 @@ pub struct World {
 impl World {
     pub fn new(light: Option<Light>, shapes: Vec<Box<dyn Shape>>) -> Self {
         World {light, shapes}
+    }
+
+    /// This function return all the intersections between
+    /// the given Ray and the world. The instersections are sorted
+    pub fn intersect(&self, ray:Ray) -> Intersections {
+        let out: Vec<Intersections> = self.shapes.iter().map(|s| s.intersect(ray)).collect();
+        let mut i: Vec<Intersection> = vec![];
+        for intersections in out{
+            for intersection in intersections.xs {
+                i.push(intersection);
+            }
+        }
+        Intersections::new(i)
+    }
+
+    pub fn shade_hit(&self, comps: Comps) -> Color {
+        comps.object.material().lighting(self.light.unwrap(), comps.point, comps.eyev, comps.normalv)
     }
 }
 

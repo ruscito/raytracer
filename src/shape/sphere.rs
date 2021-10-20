@@ -43,6 +43,10 @@ impl Sphere {
     pub fn set_material(&mut self, material: Material) {
         self.material = material;
     } 
+
+    pub fn box_new() -> Box<Sphere>  {
+        Box::new(Sphere::new())
+    }
 }
 
 impl PartialEq for Sphere {

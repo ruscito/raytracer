@@ -1,7 +1,8 @@
 use std::ops::Index;
 
+use crate::comps::Comps;
+use crate::ray::Ray; 
 use crate::shape::Shape;
-
 
 /// The type contains the value [t: f32] of the intersection
 /// and the [object: <dyn shape>] that was intersect by a ray. The value
@@ -20,6 +21,22 @@ impl Intersection {
             object,
         }
     }
+
+    /// It return a [Comps] structure containing precomputed
+    /// information relating to the intersection 
+    pub fn prepare_computations(&self, ray: Ray) -> Comps  {
+        let position = ray.position(self.t);
+        let normalv = self.object.normal_at(position);
+        let inside = normalv.dot(&-ray.direction);
+        Comps { 
+            t:self.t, 
+            object:self.object.clone_box(), 
+            point: position, 
+            eyev: - ray.direction, 
+            normalv: if inside < 0.0 {-normalv} else {normalv},
+            inside: if inside < 0.0 {true} else {false},
+        }
+    } 
 }
 
 impl PartialEq for Intersection {
@@ -28,6 +45,7 @@ impl PartialEq for Intersection {
         &self.object == &other.object
     }
 }
+
 
 
 
@@ -43,7 +61,7 @@ impl Intersections {
         out.xs.sort_by(|a, b| a.t.partial_cmp(&b.t).unwrap());
         out
     }
-
+    
     /// It returns the number of intersections 
     pub fn len(&self) -> usize {
         self.xs.len()
@@ -57,9 +75,8 @@ impl Intersections {
                 return Some(i.clone());
             }
         }
-        None
-
-    }   
+        None   
+    }
 }
 
 impl Index<usize> for  Intersections {

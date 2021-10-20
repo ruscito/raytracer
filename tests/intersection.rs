@@ -1,4 +1,7 @@
-use raytracer::{intersection::{Intersection, Intersections}, shape::Shape, shape::Sphere};
+use raytracer::intersection::{Intersection, Intersections};
+use raytracer::shape::{Shape, Sphere}; 
+use raytracer::tuple::*;
+use raytracer::ray::Ray;
 
 #[test]
 fn create_intersection() {
@@ -71,4 +74,32 @@ fn hit_4(){
     let xs = Intersections::new(vec![i1, i2, i3, i4.clone()]);
     let i = xs.hit().unwrap();
     assert_eq!(i, i4);
+}
+
+#[test]
+fn precompute_intersection() {
+    let ray = Ray::new(Point::new(0., 0., -5.), Vector::new(0.,0.,1.0));
+    let s = Sphere::box_new();
+    let i =Intersection::new(4.0, s);
+    let c = i.prepare_computations(ray);
+    assert_eq!(c.t, i.t);
+    assert_eq!(c.object.id(), i.object.id());
+    assert_eq!(c.point, Point::new(0., 0., -1.0));
+    assert_eq!(c.eyev, Vector::new(0., 0., -1.));
+    assert_eq!(c.normalv, Vector::new(0., 0., -1.));
+    assert_eq!(c.inside, false);
+}
+
+#[test]
+fn precompute_intersection_inside() {
+    let ray = Ray::new(Point::new(0., 0., 0.), Vector::new(0.,0.,1.0));
+    let s = Sphere::box_new();
+    let i =Intersection::new(1.0, s);
+    let c = i.prepare_computations(ray);
+    assert_eq!(c.t, i.t);
+    assert_eq!(c.object.id(), i.object.id());
+    assert_eq!(c.point, Point::new(0., 0., 1.0));
+    assert_eq!(c.eyev, Vector::new(0., 0., -1.));
+    assert_eq!(c.normalv, Vector::new(0., 0., -1.));
+    assert_eq!(c.inside, true);
 }
