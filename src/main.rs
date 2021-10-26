@@ -2,6 +2,7 @@ use raytracer::canvas::Canvas;
 use raytracer::color::Color; 
 use raytracer::color::RED;
 use raytracer::light::Light;
+use raytracer::material::Material;
 use raytracer::matrix::Mat4;
 use raytracer::ray::Ray;
 use raytracer::shape::Shape; 
@@ -165,7 +166,8 @@ fn raycast_3d_sphere() {
     
     let mut canvas = Canvas::new(canvas_pixels, canvas_pixels);
     let mut s = Sphere::new(); //unit sphere
-    s.material.color = Color::new(1.0, 0.2, 1.0);
+    let m = Material::new(Some(Color::new(1.0, 0.2, 1.0)), None, None, None, None);
+    s.set_material(m);
     
     
     let light_position = Point::new(-10.0, 10.0, -10.0);

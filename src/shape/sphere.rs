@@ -21,7 +21,7 @@ pub struct Sphere {
     transform: Mat4,
     inverse_transform: Mat4,
     transpose_inverse_transform: Mat4,
-    pub material: Material,
+    material: Material,
 }
 
 impl Sphere {
@@ -31,15 +31,11 @@ impl Sphere {
             transform: Mat4::identity(), 
             inverse_transform: Mat4::identity(),
             transpose_inverse_transform: Mat4::identity().transpose(),
-            material: Material::new(),
+            material: Material::default(),
         }
     }
 
-    pub fn set_transform(&mut self, transform: Mat4) {
-        self.transform = transform;
-        self.inverse_transform = transform.inv();
-        self.transpose_inverse_transform = transform.inv().transpose();
-    }
+
 
     pub fn transform(&self) -> Mat4 {
         self.transform
@@ -111,7 +107,17 @@ impl Shape for Sphere {
         world_normal.normalize()
     }
 
+    fn set_material(&mut self, material: Material) {
+        self.material = material;
+    }
+
     fn material(&self) -> Material {
         self.material.clone()
+    }
+    
+    fn set_transform(&mut self, transform: Mat4) {
+        self.transform = transform;
+        self.inverse_transform = transform.inv();
+        self.transpose_inverse_transform = transform.inv().transpose();
     }
 }

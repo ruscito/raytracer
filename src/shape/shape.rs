@@ -1,6 +1,7 @@
 //use crate::material::Material;
 
 use crate::material::Material;
+use crate::matrix::Mat4;
 use crate::tuple::{Point, Vector};
 use crate::{intersection::Intersections, ray::Ray};
 use std::fmt;
@@ -31,6 +32,12 @@ pub trait Shape : fmt::Debug {
 
     /// Return shape's material
     fn material(&self) ->Material;
+
+    /// Set shape's material
+    fn set_material(&mut self, material: Material);
+
+    /// Set shape's transform
+    fn set_transform(&mut self, t: Mat4);
 }
 
 impl Clone for Box<dyn Shape> {

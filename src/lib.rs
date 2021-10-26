@@ -35,6 +35,8 @@ pub mod ray;
 pub mod intersection;
 pub mod light;
 pub mod material;
+pub mod world;
+pub mod comps;
 
 pub const EPSILON: f32 = 0.00001;
 

@@ -5,7 +5,7 @@ use raytracer::tuple::*;
 
 #[test]
 fn default_material() {
-    let m = Material::new();
+    let m = Material::default();
     assert_eq!(m.color, Color::new(1., 1., 1.));
     assert_eq!(m.ambient, 0.1);
     assert_eq!(m.diffuse, 0.9);
@@ -15,7 +15,7 @@ fn default_material() {
 
 #[test]
 fn lighting_eye_between_light_and_surface() {
-    let m = Material::new();
+    let m = Material::default();
     let position = Point::new(0., 0., 0.);
     let eyev = Vector::new(0., 0., -1.);
     let normalv = Vector::new(0., 0., -1.);
@@ -26,7 +26,7 @@ fn lighting_eye_between_light_and_surface() {
 
 #[test]
 fn lighting_eye_between_light_and_surface_eye_45ofset() {
-    let m = Material::new();
+    let m = Material::default();
     let position = Point::new(0., 0., 0.);
     let eyev = Vector::new(0., 2f32.sqrt()/2.0, 2f32.sqrt()/2.0);
     let normalv = Vector::new(0., 0., -1.);
@@ -37,7 +37,7 @@ fn lighting_eye_between_light_and_surface_eye_45ofset() {
 
 #[test]
 fn lighting_eye_opposite_surface_light_45ofset() {
-    let m = Material::new();
+    let m = Material::default();
     let position = Point::new(0., 0., 0.);
     let eyev = Vector::new(0., 0., -1.);
     let normalv = Vector::new(0., 0., -1.);
@@ -48,7 +48,7 @@ fn lighting_eye_opposite_surface_light_45ofset() {
 
 #[test]
 fn lighting_eye_in_path_reflectio_vector() {
-    let m = Material::new();
+    let m = Material::default();
     let position = Point::new(0., 0., 0.);
     let eyev = Vector::new(0., -2f32.sqrt()/2.0, -2f32.sqrt()/2.0);
     let normalv = Vector::new(0., 0., -1.);
@@ -59,7 +59,7 @@ fn lighting_eye_in_path_reflectio_vector() {
 
 #[test]
 fn lighting_light_behind_surface() {
-    let m = Material::new();
+    let m = Material::default();
     let position = Point::new(0., 0., 0.);
     let eyev = Vector::new(0., 0., -1.);
     let normalv = Vector::new(0., 0., -1.);

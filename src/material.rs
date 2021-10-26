@@ -23,13 +23,14 @@ pub struct Material {
 }
 
 impl Material {
-    pub fn new() -> Self {
+    pub fn new(color: Option<Color>, ambient: Option<f32>, 
+        diffuse: Option<f32>, specular: Option<f32>, shininess: Option<f32>) -> Self {
         Self {
-            color: Color::new(1., 1., 1.),
-            ambient: 0.1,
-            diffuse: 0.9,
-            specular: 0.9,
-            shininess: 200.0,
+            color: color.unwrap_or(Color::new(1., 1., 1.)),
+            ambient: ambient.unwrap_or(0.1),
+            diffuse: diffuse.unwrap_or(0.9),
+            specular: specular.unwrap_or(0.9),
+            shininess: shininess.unwrap_or(200.0),
         }
     }
 
@@ -75,5 +76,17 @@ impl Material {
             }
         } 
         ambient + diffuse + specular
+    }
+}
+
+impl Default for Material {
+    fn default() -> Self {
+        Self {
+            color: Color::new(1., 1., 1.),
+            ambient: 0.1,
+            diffuse: 0.9,
+            specular: 0.9,
+            shininess: 200.0,
+        }        
     }
 }
