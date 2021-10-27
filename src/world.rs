@@ -1,3 +1,4 @@
+use crate::comps::Comps;
 use crate::intersection::{self, Intersections};
 use crate::light::Light;
 use crate::material::Material;
@@ -33,6 +34,12 @@ impl World {
             }
         }
         Intersections::new(xs)
+    }
+
+    /// This function return the color at the intersection encapsulated
+    /// by the given [c: Comps] with the world
+    pub fn shade_it(&self, c: Comps) -> Color {
+        c.object.material().lighting(self.light.unwrap(), c.point, c.eyev, c.normalv)
     }
 }
 

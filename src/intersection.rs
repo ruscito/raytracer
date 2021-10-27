@@ -1,5 +1,7 @@
 use std::ops::Index;
 
+use crate::comps::Comps;
+use crate::ray::Ray;
 use crate::shape::Shape;
 
 
@@ -19,6 +21,26 @@ impl Intersection {
             t,
             object,
         }
+    }
+
+    pub fn prepare_computation(&self, r: Ray) -> Comps {
+        let point = r.position(self.t);
+        let mut normalv = self.object.normal_at(point);
+        let eyev = -r.direction;
+        let mut inside = false;
+
+        if normalv.dot(&eyev) < 0.0 {
+            inside = true;
+            normalv = -normalv;
+        }
+        Comps {
+            t: self.t, 
+            object: self.object.clone_box(), 
+            point: point,
+            eyev: eyev,
+            normalv: normalv,
+            inside: inside
+        }  
     }
 }
 

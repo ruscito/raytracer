@@ -120,4 +120,8 @@ impl Shape for Sphere {
         self.inverse_transform = transform.inv();
         self.transpose_inverse_transform = transform.inv().transpose();
     }
+
+    fn transform(&self) -> Mat4 {
+        self.transform
+    }
 }

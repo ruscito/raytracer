@@ -36,6 +36,8 @@ pub trait Shape : fmt::Debug {
     /// Set shape's material
     fn set_material(&mut self, material: Material);
 
+    /// Return Transform
+    fn transform(&self) -> Mat4;
     /// Set shape's transform
     fn set_transform(&mut self, t: Mat4);
 }
