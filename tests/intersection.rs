@@ -1,5 +1,3 @@
-use std::ops::RangeFrom;
-
 use raytracer::{intersection::{Intersection, Intersections}, ray::Ray, shape::Shape, shape::Sphere, tuple::*};
 
 #[test]

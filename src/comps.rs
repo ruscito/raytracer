@@ -1,5 +1,3 @@
-use crate::intersection::Intersection;
-use crate::ray::Ray;
 use crate::shape::Shape;
 use crate::tuple::*;
 

@@ -1,12 +1,10 @@
 use raytracer::color::{Color, WHITE};
 use raytracer::intersection::Intersection;
 use raytracer::light::Light;
-use raytracer::material::Material;
 use raytracer::matrix::mat4::scale;
 use raytracer::ray::Ray;
-use raytracer::shape::{Shape, Sphere};
 use raytracer::world::World;
-use raytracer::{tuple::*, world};
+use raytracer::tuple::*;
 
 #[test]
 fn creating_world() {
