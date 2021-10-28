@@ -85,3 +85,24 @@ fn color_with_intersection_behind_ray() {
     let r = Ray::new(Point::new(0.0, 0.0, 0.75), Vector::new(0., 0., -1.));
     assert_eq!(w.color_at(r), Color::new(0.1, 0.1, 0.1));
 }
+
+#[test]
+fn shadow_object_between_point_and_light() {
+    let w = World::default();
+    let p = Point::new(10., -10., 10.);
+    assert!(w.is_shadowed(p))
+}
+
+#[test]
+fn shadow_object_behind_light() {
+    let w = World::default();
+    let p = Point::new(-20., 20., -20.);
+    assert!(!w.is_shadowed(p))
+}
+
+#[test]
+fn shadow_object_behind_point() {
+    let w = World::default();
+    let p = Point::new(-2., 2., -2.);
+    assert!(!w.is_shadowed(p))
+}

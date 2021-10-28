@@ -39,7 +39,7 @@ impl World {
     /// This function return the color at the intersection encapsulated
     /// by the given [c: Comps] with the world
     pub fn shade_it(&self, c: Comps) -> Color {
-        c.object.material().lighting(self.light.unwrap(), c.point, c.eyev, c.normalv)
+        c.object.material().lighting(self.light.unwrap(), c.point, c.eyev, c.normalv, false)
     }
 
     /// This function intersect the world with the given ray 
@@ -53,20 +53,50 @@ impl World {
         }
     }
 
+    /// This function return true if somethin intersect
+    /// between the point and the light source
+    pub fn is_shadowed(&self, p: Point) -> bool {
+        // Measure the distance from point to the light source 
+        let v: Vector;
+        if let Some(light) = self.light {
+            v = light.position - p;
+        } else {
+            panic!("There are no light defined for the world [{:?}]", self);
+        }
+        let distance = v.magnitude();
+        
+        // Create a ray from point toward the light source 
+        // by normalizing the previus vector
+        let direction = v.normalize();
+
+        // Intersect the world with that ray
+        let intersection = self.intersect(Ray::new(p, direction));
+
+        // Check to see if there was a hit, and if so, whether t is less 
+        // than distance. If so, the hit lies between the point and the 
+        // light source, and the point is in shadow.
+        if let Some(hit) = intersection.hit() {
+            if hit.t < distance {
+                return true;
+            }
+        }
+        false
+    }
 }
 
 impl Default for World {
     fn default() -> Self {
-        let mut s1 = Box::new(Sphere::new());
-        let mut s2 = Box::new(Sphere::new());
         let mtrl = Material::new(
             Some(Color::new(0.8, 1.0, 0.6)), 
             None, 
             Some(0.7), 
             Some(0.2), 
             None);
-        s1.set_material(mtrl);
-        s2.set_transform(scale(0.5, 0.5, 0.5));
+        let trm = scale(0.5, 0.5, 0.5);
+
+        let s1 = Box::new(Sphere::new(None, Some(mtrl)));
+        let s2 = Box::new(Sphere::new(Some(trm), None));
+        
         World { 
             light: Some(Light::new(
                 Point::new(-10., 10., -10.), 

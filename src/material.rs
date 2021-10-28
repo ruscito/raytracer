@@ -37,7 +37,7 @@ impl Material {
     /// This function is what will shade the [Material] and make the shape three-dimensional. It expects 
     /// 4 arguments beside itself, the [light: Light] source, the [point: Point] being illuminated, the [eye: Vector]
     /// and the [normal: Vector] from the Phong reflection models  
-    pub fn lighting(&self, light: Light, point: Point, eye: Vector, normal: Vector) -> Color {
+    pub fn lighting(&self, light: Light, point: Point, eye: Vector, normal: Vector, in_shadow: bool) -> Color {
         // combine the surface color with the light's color/intesity
         let effective_color = self.color * light.intensity;
         
@@ -47,6 +47,10 @@ impl Material {
         // compute the ambient contribution
         let ambient = effective_color * self.ambient;
 
+        if in_shadow == true {
+            return ambient;
+        }
+        
         let specular: Color;
         let diffuse: Color;
         // light_dot_normal represents the cosine ot the angle between the

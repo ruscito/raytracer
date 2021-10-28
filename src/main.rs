@@ -124,7 +124,7 @@ fn raycast_2d_sphere() {
 
     let t = Mat4::identity().scale(1., 0.5, 1.).skew(0.5, 0., 0.5, 0., 0., 0.);
 
-    let mut s = Sphere::new(); //unit sphere
+    let mut s = Sphere::new(None, None); //unit sphere
     s.set_transform(t);
     let ray_origin = Point::new(0.0, 0.0, -5.0);
 
@@ -167,7 +167,7 @@ fn raycast_3d_sphere() {
     let half = wall_size as f32 / 2.0;
     
     let mut canvas = Canvas::new(canvas_pixels, canvas_pixels);
-    let mut s = Sphere::new(); //unit sphere
+    let mut s = Sphere::new(None, None); //unit sphere
     let m = Material::new(Some(Color::new(1.0, 0.2, 1.0)), None, None, None, None);
     s.set_material(m);
     
@@ -195,7 +195,7 @@ fn raycast_3d_sphere() {
                 let point = ray.position(hit.t);
                 let normal = hit.object.normal_at(point);
                 let eye= - ray.direction;
-                canvas[(x, y)] = hit.object.material().lighting(light, point, eye, normal);
+                canvas[(x, y)] = hit.object.material().lighting(light, point, eye, normal, false);
                 //println!("{} elpased.", start.elapsed().as_micros());
             }
         }
@@ -205,17 +205,18 @@ fn raycast_3d_sphere() {
 
 fn ch7() {
     // FLOOR
-    let mut floor = Sphere::new();
-    floor.set_transform(scale(10.0, 0.01, 10.0));
-    floor.set_material(Material::new(
+    let t = scale(10.0, 0.01, 10.0);
+    let mtr = Material::new(
         Some(Color::new(1.0, 0.9, 0.9)),
         None,
         None,
         Some(0.0),
         None
-    ));
+    );
+    let floor = Sphere::new(Some(t), Some(mtr));
+
     // LEFT WALL
-    let mut left_wall = Sphere::new();
+    let mut left_wall = Sphere::new(None, None);
     left_wall.set_transform(
         translate(0.0, 0.0, 5.0).
         rotate_y(-PI/4.0).rotate_x(PI/2.0).
@@ -229,7 +230,7 @@ fn ch7() {
         None)
     );
     // RIGHT WALL
-    let mut right_wall = Sphere::new();
+    let mut right_wall = Sphere::new(None, None);
     right_wall.set_transform(
         translate(0.0, 0.0, 5.0).
         rotate_y(PI/4.0).rotate_x(PI/2.0).
@@ -237,7 +238,7 @@ fn ch7() {
     );
     right_wall.set_material(floor.material());
     // MIDDLE SPHERE
-    let mut middle = Sphere::new();
+    let mut middle = Sphere::new(None, None);
     middle.set_transform(translate(-0.5, 1.0, 0.5));
     middle.set_material(Material::new(
         Some(Color::new(0.1, 1.0, 0.5)),
@@ -247,7 +248,7 @@ fn ch7() {
         None)
     );
     // RIGHT SPHERE
-    let mut right = Sphere::new();
+    let mut right = Sphere::new(None, None);
     right.set_transform(translate(1.5, 0.5, -0.5).scale(0.5, 0.5, 0.5));
     right.set_material(Material::new(
         Some(Color::new(0.5, 1.0, 0.1)),
@@ -257,7 +258,7 @@ fn ch7() {
         None)
     );
     // LEFT SPHERE
-    let mut left = Sphere::new();
+    let mut left = Sphere::new(None, None);
     left.set_transform(translate(-1.5, 0.33, -0.75).scale(0.33, 0.33, 0.33));
     left.set_material(Material::new(
         Some(Color::new(1.0, 0.8, 0.1)),

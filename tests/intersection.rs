@@ -2,7 +2,7 @@ use raytracer::{intersection::{Intersection, Intersections}, ray::Ray, shape::Sh
 
 #[test]
 fn create_intersection() {
-    let s = Box::new(Sphere::new());
+    let s = Box::new(Sphere::new(None, None));
     let i = Intersection::new(3.5, s.clone());
     assert_eq!(i.t, 3.5);
     assert_eq!(i.object.id(), s.id());
@@ -11,7 +11,7 @@ fn create_intersection() {
 #[test]
 #[should_panic]
 fn eq_intersections() {
-    let s = Box::new(Sphere::new());
+    let s = Box::new(Sphere::new(None, None));
     let i1 = Intersection::new(1.0, s.clone());
     let i2 = Intersection::new(1.0, s.clone());    
     if i1 == i2 {
@@ -21,7 +21,7 @@ fn eq_intersections() {
 
 #[test]
 fn aggregating_intrsections() {
-    let s = Box::new(Sphere::new());
+    let s = Box::new(Sphere::new(None, None));
     let i1 = Intersection::new(1.0, s.clone());
     let i2 = Intersection::new(2.0, s.clone());
     let xs = Intersections::new(vec![i2, i1]);
@@ -32,7 +32,7 @@ fn aggregating_intrsections() {
 
 #[test]
 fn hit_1(){
-    let s = Box::new(Sphere::new());
+    let s = Box::new(Sphere::new(None, None));
     let i1 = Intersection::new(1.0, s.clone());
     let i2 = Intersection::new(2.0, s);
     let xs = Intersections::new(vec![i2, i1.clone()]);
@@ -42,7 +42,7 @@ fn hit_1(){
 
 #[test]
 fn hit_2(){
-    let s = Box::new(Sphere::new());
+    let s = Box::new(Sphere::new(None, None));
     let i1 = Intersection::new(-1.0, s.clone());
     let i2 = Intersection::new(1.0, s);
     let xs = Intersections::new(vec![i2.clone(), i1]);
@@ -53,7 +53,7 @@ fn hit_2(){
 #[test]
 #[should_panic]
 fn hit_3(){
-    let s = Box::new(Sphere::new());
+    let s = Box::new(Sphere::new(None, None));
     let i1 = Intersection::new(-2.0, s.clone());
     let i2 = Intersection::new(-1.0, s);
     let xs = Intersections::new(vec![i1, i2]);
@@ -63,7 +63,7 @@ fn hit_3(){
 #[test]
 #[should_panic]
 fn hit_4(){
-    let s = Box::new(Sphere::new());
+    let s = Box::new(Sphere::new(None, None));
     let i1 = Intersection::new(5.0, s.clone());
     let i2 = Intersection::new(7.0, s.clone());
     let i3 = Intersection::new(-3.0, s.clone());
@@ -75,7 +75,7 @@ fn hit_4(){
 
 #[test]
 fn comps_return() {
-    let i = Intersection::new(4.0, Box::new(Sphere::new()));
+    let i = Intersection::new(4.0, Box::new(Sphere::new(None, None)));
     let comps = i.prepare_computation(Ray::new(Point::new(0., 0., -5.), Vector::new(0., 0., 1.)));
     assert_eq!(comps.t, i.t);
     assert_eq!(comps.point, Point::new(0.0, 0.0, -1.0));
@@ -87,7 +87,7 @@ fn comps_return() {
 #[test]
 fn when_intersection_is_outside() {
     let r = Ray::new(Point::new(0.,0.,-5.), Vector::new(0.0, 0.0, 1.0));
-    let i = Intersection::new(4.0, Box::new(Sphere::new()));
+    let i = Intersection::new(4.0, Box::new(Sphere::new(None, None)));
     let comps = i.prepare_computation(r);
     assert_eq!(comps.inside, false);
 }
@@ -95,7 +95,7 @@ fn when_intersection_is_outside() {
 #[test]
 fn when_intersection_is_inside() {
     let r = Ray::new(Point::new(0.,0.,0.), Vector::new(0.0, 0.0, 1.0));
-    let i = Intersection::new(1.0, Box::new(Sphere::new()));
+    let i = Intersection::new(1.0, Box::new(Sphere::new(None, None)));
     let comps = i.prepare_computation(r);
     assert_eq!(comps.inside, true);
     assert_eq!(comps.point, Point::new(0.0, 0.0, 1.0));

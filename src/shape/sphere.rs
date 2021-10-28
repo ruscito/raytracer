@@ -25,13 +25,14 @@ pub struct Sphere {
 }
 
 impl Sphere {
-    pub fn new() -> Self {
+    pub fn new(transform: Option<Mat4>, material: Option<Material>) -> Self {
+        let t = transform.unwrap_or(Mat4::identity());
         Self {
             id: get_id(),
-            transform: Mat4::identity(), 
-            inverse_transform: Mat4::identity(),
-            transpose_inverse_transform: Mat4::identity().transpose(),
-            material: Material::default(),
+            transform: t, 
+            inverse_transform: t.inv(),
+            transpose_inverse_transform: t.inv().transpose(),
+            material: material.unwrap_or( Material::default()),
         }
     }
 
