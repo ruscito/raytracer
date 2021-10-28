@@ -1,5 +1,5 @@
 use crate::comps::Comps;
-use crate::intersection::{self, Intersections};
+use crate::intersection::Intersections;
 use crate::light::Light;
 use crate::material::Material;
 use crate::matrix::mat4::scale;

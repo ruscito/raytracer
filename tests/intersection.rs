@@ -98,6 +98,6 @@ fn when_intersection_is_inside() {
     let i = Intersection::new(1.0, Box::new(Sphere::new()));
     let comps = i.prepare_computation(r);
     assert_eq!(comps.inside, true);
-    assert_eq!(comps.point, Point::new(0.0, 0.0, 1.0));;
+    assert_eq!(comps.point, Point::new(0.0, 0.0, 1.0));
     assert_eq!(comps.normalv, Vector::new(0.0, 0.0, -1.0));
 }

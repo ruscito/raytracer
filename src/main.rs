@@ -1,14 +1,19 @@
+use raytracer::camera::Camera;
 use raytracer::canvas::Canvas; 
 use raytracer::color::Color; 
 use raytracer::color::RED;
+use raytracer::color::WHITE;
 use raytracer::light::Light;
 use raytracer::material::Material;
 use raytracer::matrix::Mat4;
+use raytracer::matrix::mat4::translate;
+use raytracer::matrix::mat4::view_transform;
 use raytracer::ray::Ray;
 use raytracer::shape::Shape; 
 use raytracer::shape::Sphere;
 use raytracer::tuple::*;
-use raytracer::matrix::mat4::{identity, rotate_z};
+use raytracer::matrix::mat4::{identity, rotate_z, scale};
+use raytracer::world::World;
 use std::{f32::consts::PI};
 
 //use std::time;
@@ -94,12 +99,9 @@ fn move_a_point() {
     let speed = 0.01;
 
     let direction = end_point - start_point;
-    let distance = start_point.distance(&end_point);
     let velocity = direction.normalize() * speed;
 
     let mut position = start_point;
-
-    println!("Start distance ={}", distance);
 
     while position.distance(&start_point) <= start_point.distance(&end_point) {
         cv[(position.x as usize, 200usize - position.y as usize)] = RED;
@@ -201,10 +203,100 @@ fn raycast_3d_sphere() {
     canvas.save("3d_red_sphere.png").unwrap();
 }
 
+fn ch7() {
+    // FLOOR
+    let mut floor = Sphere::new();
+    floor.set_transform(scale(10.0, 0.01, 10.0));
+    floor.set_material(Material::new(
+        Some(Color::new(1.0, 0.9, 0.9)),
+        None,
+        None,
+        Some(0.0),
+        None
+    ));
+    // LEFT WALL
+    let mut left_wall = Sphere::new();
+    left_wall.set_transform(
+        translate(0.0, 0.0, 5.0).
+        rotate_y(-PI/4.0).rotate_x(PI/2.0).
+        scale(10.0, 0.01, 10.0)
+    );
+    left_wall.set_material(Material::new(
+        Some(Color::new(1.0, 0.9, 0.9)),
+        None,
+        None,
+        Some(0.0),
+        None)
+    );
+    // RIGHT WALL
+    let mut right_wall = Sphere::new();
+    right_wall.set_transform(
+        translate(0.0, 0.0, 5.0).
+        rotate_y(PI/4.0).rotate_x(PI/2.0).
+        scale(10.0, 0.01, 10.0)
+    );
+    right_wall.set_material(floor.material());
+    // MIDDLE SPHERE
+    let mut middle = Sphere::new();
+    middle.set_transform(translate(-0.5, 1.0, 0.5));
+    middle.set_material(Material::new(
+        Some(Color::new(0.1, 1.0, 0.5)),
+        None,
+        Some(0.7),
+        Some(0.3),
+        None)
+    );
+    // RIGHT SPHERE
+    let mut right = Sphere::new();
+    right.set_transform(translate(1.5, 0.5, -0.5).scale(0.5, 0.5, 0.5));
+    right.set_material(Material::new(
+        Some(Color::new(0.5, 1.0, 0.1)),
+        None,
+        Some(0.7),
+        Some(0.3),
+        None)
+    );
+    // LEFT SPHERE
+    let mut left = Sphere::new();
+    left.set_transform(translate(-1.5, 0.33, -0.75).scale(0.33, 0.33, 0.33));
+    left.set_material(Material::new(
+        Some(Color::new(1.0, 0.8, 0.1)),
+        None,
+        Some(0.7),
+        Some(0.3),
+        None)
+    );
+    // THE WORLD
+    let world = World::new(
+        Some(Light::new(
+            Point::new(-10., 10.0, -10.0), 
+            WHITE)),
+            Some(vec![
+                floor.clone_box(), 
+                left_wall.clone_box(), 
+                right_wall.clone_box(), 
+                middle.clone_box(), 
+                right.clone_box(), 
+                left.clone_box()])
+    );
+    // THE CAMERA
+    let mut camera = Camera::new(2000, 1000, PI/3.0);
+    camera.set_transform(view_transform(
+        Point::new(0., 1.5, -5.), 
+        Point::new(0., 1., 0.),
+        Vector::new(0., 1., 0.))
+    );
+    //THE CANVAS
+    let canvas = camera.render(world);
+    canvas.save("ch7.png").unwrap();
+}
+
+
 fn main() {
     move_a_point();
     projectile();
     clock();
     raycast_2d_sphere();
     raycast_3d_sphere();
+    ch7();
 }
