@@ -326,3 +326,21 @@ pub fn skew(xy:f32, xz:f32, yx:f32, yz:f32, zx:f32, zy:f32) -> Mat4 {
          0.0, 0.0, 0.0, 1.0 ]
         )
 }
+
+/// This function pretend the eye moves not the world. You specifie
+/// where you want the eye in the scene [from] the point in the scene
+/// at which you want to look [to] and a vector indicating which direction
+/// is [up]. The function return the corresponding transformation matrix
+pub fn view_transform(from: Point, to: Point, up: Vector) -> Mat4 {
+    let forward = (to - from).normalize();
+    let upn = up.normalize();
+    let left = forward.cross(&upn);
+    let true_up = left.cross(&forward);
+    let orientation = Mat4::from_buffer([
+        left.x, left.y, left.z, 0.0,
+        true_up.x, true_up.y, true_up.z, 0.0,
+        -forward.x, -forward.y, -forward.z, 0.0,
+        0.0, 0.0, 0.0, 1.0
+    ]);
+    orientation * translate(-from.x, -from.y, -from.z)
+}

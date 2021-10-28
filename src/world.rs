@@ -5,7 +5,7 @@ use crate::material::Material;
 use crate::matrix::mat4::scale;
 use crate::ray::Ray;
 use crate::shape::{Shape, Sphere};
-use crate::color::Color;
+use crate::color::{BLACK, Color};
 use crate::tuple::*;
 
 #[derive(Debug, Clone)]
@@ -41,6 +41,18 @@ impl World {
     pub fn shade_it(&self, c: Comps) -> Color {
         c.object.material().lighting(self.light.unwrap(), c.point, c.eyev, c.normalv)
     }
+
+    /// This function intersect the world with the given ray 
+    /// and then return the color at the resulting intersection.
+    pub fn color_at(&self, r: Ray) -> Color {
+        let xs = self.intersect(r);        
+        if let Some(hit) = xs.hit() {
+            self.shade_it(hit.prepare_computation(r))
+        } else {
+            BLACK
+        }
+    }
+
 }
 
 impl Default for World {

@@ -1,6 +1,7 @@
 
 use std::f32::consts::PI;
 
+use raytracer::matrix::mat4::{identity, view_transform};
 use raytracer::matrix::{Mat3, Mat4};
 use raytracer::tuple::{Point, Vector};
 
@@ -270,4 +271,41 @@ fn chaining_transform() {
         scale(5.0, 5.0, 5.0).
         rotate_x(PI/2.0);
     assert_eq!(t * p, Point::new(15.0, 0.0, 7.0))
+}
+
+#[test]
+fn view_transform_default_orintation() {
+    let from = Point::new(0.0, 0.0, 0.0);
+    let to = Point::new(0.,0.,-1.);
+    let up = Vector::new(0.,1.,0.);
+    assert_eq!(view_transform(from, to, up), identity());
+}
+
+#[test]
+fn view_transform_looking_poitive_z_dir() {
+    let from = Point::new(0.0, 0.0, 0.0);
+    let to = Point::new(0.,0.,1.);
+    let up = Vector::new(0.,1.,0.);
+    assert_eq!(view_transform(from, to, up), Mat4::identity().scale(-1., 1., -1.));
+}
+
+#[test]
+fn view_transform_move_the_world() {
+    let from = Point::new(0.0, 0.0, 8.0);
+    let to = Point::new(0.,0.,0.);
+    let up = Vector::new(0.,1.,0.);
+    assert_eq!(view_transform(from, to, up), Mat4::identity().translate(0., 0., -8.));
+}
+
+#[test]
+fn view_transform_arbitraty() {
+    let from = Point::new(1.0, 3.0, 2.0);
+    let to = Point::new(4.0,-2.0,8.0);
+    let up = Vector::new(1.0,1.0,0.0);
+    assert_eq!(view_transform(from, to, up), Mat4::from_buffer([
+        -0.50709254, 0.50709254, 0.6761234, -2.366432, 
+         0.76771593, 0.6060915, 0.12121832, -2.828427, 
+        -0.35856858, 0.59761435, -0.71713716, -0.00000023841858, 
+        0.0, 0.0, 0.0, 1.0
+    ]));
 }

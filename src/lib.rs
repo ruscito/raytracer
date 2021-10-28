@@ -37,6 +37,7 @@ pub mod light;
 pub mod material;
 pub mod world;
 pub mod comps;
+pub mod camera;
 
 pub const EPSILON: f32 = 0.00001;
 

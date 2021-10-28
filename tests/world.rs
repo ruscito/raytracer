@@ -1,6 +1,7 @@
-use raytracer::color::{Color, WHITE};
+use raytracer::color::{BLACK, Color, WHITE};
 use raytracer::intersection::Intersection;
 use raytracer::light::Light;
+use raytracer::material::Material;
 use raytracer::matrix::mat4::scale;
 use raytracer::ray::Ray;
 use raytracer::world::World;
@@ -56,4 +57,31 @@ fn shading_an_intersection_from_inside() {
     let i = Intersection::new(0.5, w.objects[1].clone_box());
     let c = w.shade_it(i.prepare_computation(r));
     assert_eq!(c, Color::new(0.90498, 0.90498, 0.90498))
+}
+
+#[test]
+fn color_when_ray_miss() {
+    let w = World::default();
+    let r = Ray::new(Point::new(0.0, 0.0, -5.), Vector::new(0., 1., 0.));
+    assert_eq!(w.color_at(r), BLACK);
+}
+
+#[test]
+fn color_when_ray_hit() {
+    let w = World::default();
+    let r = Ray::new(Point::new(0.0, 0.0, -5.), Vector::new(0., 0., 1.));
+    assert_eq!(w.color_at(r), Color::new(0.38066, 0.47583, 0.2855));
+}
+
+#[test]
+fn color_with_intersection_behind_ray() {
+    let w = World::default();
+    let mut outher = w.objects[0].clone_box();
+    outher.set_material(Material::new(None, Some(1.0), None, None, None));
+    println!("Material outer {:?}", outher.material());
+    let mut inner = w.objects[1].clone_box();
+    inner.set_material(Material::new(None, Some(1.0), None, None, None));
+    println!("Material inner {:?}", inner.material());
+    let r = Ray::new(Point::new(0.0, 0.0, 0.75), Vector::new(0., 0., -1.));
+    assert_eq!(w.color_at(r), Color::new(0.1, 0.1, 0.1));
 }
