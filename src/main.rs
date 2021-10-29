@@ -213,11 +213,10 @@ fn ch7() {
         Some(0.0),
         None
     );
-    
-    let floor = Sphere::new(Some(t), Some(mtr));
+    let floor = Box::new(Sphere::new(Some(t), Some(mtr)));
 
     // LEFT WALL
-    let mut left_wall = Sphere::new(None, None);
+    let mut left_wall = Box::new(Sphere::new(None, None));
     left_wall.set_transform(
         translate(0.0, 0.0, 5.0).
         rotate_y(-PI/4.0).rotate_x(PI/2.0).
@@ -231,7 +230,7 @@ fn ch7() {
         None)
     );
     // RIGHT WALL
-    let mut right_wall = Sphere::new(None, None);
+    let mut right_wall = Box::new(Sphere::new(None, None));
     right_wall.set_transform(
         translate(0.0, 0.0, 5.0).
         rotate_y(PI/4.0).rotate_x(PI/2.0).
@@ -239,7 +238,7 @@ fn ch7() {
     );
     right_wall.set_material(floor.material());
     // MIDDLE SPHERE
-    let mut middle = Sphere::new(None, None);
+    let mut middle = Box::new(Sphere::new(None, None));
     middle.set_transform(translate(-0.5, 1.0, 0.5));
     middle.set_material(Material::new(
         Some(Color::new(0.1, 1.0, 0.5)),
@@ -249,7 +248,7 @@ fn ch7() {
         None)
     );
     // RIGHT SPHERE
-    let mut right = Sphere::new(None, None);
+    let mut right = Box::new(Sphere::new(None, None));
     right.set_transform(translate(1.5, 0.5, -0.5).scale(0.5, 0.5, 0.5));
     right.set_material(Material::new(
         Some(Color::new(0.5, 1.0, 0.1)),
@@ -259,7 +258,7 @@ fn ch7() {
         None)
     );
     // LEFT SPHERE
-    let mut left = Sphere::new(None, None);
+    let mut left = Box::new(Sphere::new(None, None));
     left.set_transform(translate(-1.5, 0.33, -0.75).scale(0.33, 0.33, 0.33));
     left.set_material(Material::new(
         Some(Color::new(1.0, 0.8, 0.1)),
@@ -273,13 +272,7 @@ fn ch7() {
         Some(Light::new(
             Point::new(-10., 10.0, -10.0), 
             WHITE)),
-            Some(vec![
-                floor.clone_box(), 
-                left_wall.clone_box(), 
-                right_wall.clone_box(), 
-                middle.clone_box(), 
-                right.clone_box(), 
-                left.clone_box()])
+            Some(vec![floor, left_wall, right_wall, middle, right, left])
     );
     // THE CAMERA
     let mut camera = Camera::new(500, 250, PI/3.0);

@@ -38,7 +38,7 @@ impl World {
 
     /// This function return the color at the intersection encapsulated
     /// by the given [c: Comps] with the world
-    pub fn shade_it(&self, c: Comps) -> Color {
+    pub fn shade_hit(&self, c: Comps) -> Color {
         //c.object.material().lighting(self.light.unwrap(), c.point, c.eyev, c.normalv, false)
         c.object.material().lighting(
             self.light.unwrap(), 
@@ -53,7 +53,7 @@ impl World {
     pub fn color_at(&self, r: Ray) -> Color {
         let xs = self.intersect(r);        
         if let Some(hit) = xs.hit() {
-            self.shade_it(hit.prepare_computation(r))
+            self.shade_hit(hit.prepare_computation(r))
         } else {
             BLACK
         }
@@ -88,10 +88,7 @@ impl World {
             }
         }
         false
-
     }
-
-
 }
 
 impl Default for World {

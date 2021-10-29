@@ -43,7 +43,7 @@ fn shading_an_intersection() {
     let w = World::default();
     let r = Ray::new(Point::new(0., 0., -5.), Vector::new(0., 0., 1.));
     let i = Intersection::new(4.0, w.objects[0].clone_box());
-    let c = w.shade_it(i.prepare_computation(r));
+    let c = w.shade_hit(i.prepare_computation(r));
     assert_eq!(c, Color::new(0.38066, 0.47583, 0.2855))
 }
 
@@ -56,7 +56,7 @@ fn shading_an_intersection_from_inside() {
     ));
     let r = Ray::new(Point::new(0., 0., 0.), Vector::new(0., 0., 1.));
     let i = Intersection::new(0.5, w.objects[1].clone_box());
-    let c = w.shade_it(i.prepare_computation(r));
+    let c = w.shade_hit(i.prepare_computation(r));
     assert_eq!(c, Color::new(0.90498, 0.90498, 0.90498))
 }
 
@@ -118,6 +118,6 @@ fn shade_it() {
     let r = Ray::new(Point::new(0., 0., 5.), Vector::new(0., 0., 1.));
     let i = Intersection::new(4.0, s2.clone_box());
     let comps = i.prepare_computation(r);
-    let c = w.shade_it(comps);
+    let c = w.shade_hit(comps);
     assert_eq!(c, Color::new(0.1, 0.1, 0.1));
 }
