@@ -1,4 +1,4 @@
-use raytracer::{f32eq, tuple::*};
+use raytracer::{f64eq, tuple::*};
 
 #[test]
 fn tuple_is_a_point() {
@@ -94,9 +94,9 @@ fn computing_magnitude(){
     let v = Vector::new(0.0, 0.0, 1.0);
     assert_eq!(v.magnitude(), 1.0);
     let v = Vector::new(1.0, 2.0, 3.0);
-    assert_eq!(v.magnitude(), 14f32.sqrt());
+    assert_eq!(v.magnitude(), 14f64.sqrt());
     let v = Vector::new(-1.0, -2.0, -3.0);
-    assert_eq!(v.magnitude(), 14f32.sqrt());
+    assert_eq!(v.magnitude(), 14f64.sqrt());
 }
 
 #[test]
@@ -104,15 +104,15 @@ fn normalizing_vector() {
     let v = Vector::new(4.0, 0.0, 0.0);
     assert_eq!(v.normalize(), Vector::new(1.0, 0.0, 0.0));
     let v = Vector::new(1.0, 2.0, 3.0).normalize();
-    assert!(f32eq(v.x, 0.26726));
-    assert!(f32eq(v.y, 0.53452));
-    assert!(f32eq(v.z, 0.80178));
+    assert!(f64eq(v.x, 0.26726));
+    assert!(f64eq(v.y, 0.53452));
+    assert!(f64eq(v.z, 0.80178));
    
     let mut v = Vector::new(1.0, 2.0, 3.0);
     v.mut_normalize();
-    assert!(f32eq(v.x, 0.26726));
-    assert!(f32eq(v.y, 0.53452));
-    assert!(f32eq(v.z, 0.80178));
+    assert!(f64eq(v.x, 0.26726));
+    assert!(f64eq(v.y, 0.53452));
+    assert!(f64eq(v.z, 0.80178));
 }
 
 #[test]
@@ -142,7 +142,7 @@ fn reflecting_a_vector_at_45() {
 #[test]
 fn reflecting_a_vector_of_slabt_surface() {
     let v = Vector::new(0.0, -1.0, 0.0);
-    let n = Vector::new(2.0f32.sqrt()/2.0, 2.0f32.sqrt()/2.0, 0.);
+    let n = Vector::new(2.0f64.sqrt()/2.0, 2.0f64.sqrt()/2.0, 0.);
     let r = v.reflect(n);
     assert_eq!(r, Vector::new(1., 0., 0.));
 }

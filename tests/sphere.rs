@@ -1,4 +1,4 @@
-use std::f32::consts::PI;
+use std::f64::consts::PI;
 
 use raytracer::material::Material;
 use raytracer::matrix::{Mat4, mat4::{*, self}};
@@ -121,14 +121,14 @@ fn normal_at_point_on_z() {
 #[test]
 fn normal_at_nonaxial_point() {
     let s= Sphere::new(None, None);
-    let n = s.normal_at(Point::new(3.0f32.sqrt()/3.0,3.0f32.sqrt()/3.0,3.0f32.sqrt()/3.0));
-    assert_eq!(n, Vector::new(3.0f32.sqrt()/3.0, 3.0f32.sqrt()/3.0, 3.0f32.sqrt()/3.0))
+    let n = s.normal_at(Point::new(3.0f64.sqrt()/3.0,3.0f64.sqrt()/3.0,3.0f64.sqrt()/3.0));
+    assert_eq!(n, Vector::new(3.0f64.sqrt()/3.0, 3.0f64.sqrt()/3.0, 3.0f64.sqrt()/3.0))
 }
 
 #[test]
 fn normal_is_normalized_vector() {
     let s= Sphere::new(None, None);
-    let n = s.normal_at(Point::new(3.0f32.sqrt()/3.0,3.0f32.sqrt()/3.0,3.0f32.sqrt()/3.0));
+    let n = s.normal_at(Point::new(3.0f64.sqrt()/3.0,3.0f64.sqrt()/3.0,3.0f64.sqrt()/3.0));
     assert_eq!(n, n.normalize());
 }
 
@@ -144,7 +144,7 @@ fn normal_on_a_traslate_sphere() {
 fn normal_on_a_transformed_sphere() {
     let m = Mat4::identity().scale(1., 0.5, 1.).rotate_z(PI/5.0);
     let s = Sphere::new(Some(m), None);
-    let n = s.normal_at(Point::new(0., 2.0f32.sqrt()/2.0, -2.0f32.sqrt()/2.0));
+    let n = s.normal_at(Point::new(0., 2.0f64.sqrt()/2.0, -2.0f64.sqrt()/2.0));
     assert_eq!(n, Vector::new(0., 0.97014, -0.24254))
 }
 

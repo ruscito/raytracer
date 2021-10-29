@@ -28,7 +28,7 @@ fn lighting_eye_between_light_and_surface() {
 fn lighting_eye_between_light_and_surface_eye_45ofset() {
     let m = Material::default();
     let position = Point::new(0., 0., 0.);
-    let eyev = Vector::new(0., 2f32.sqrt()/2.0, 2f32.sqrt()/2.0);
+    let eyev = Vector::new(0., 2f64.sqrt()/2.0, 2f64.sqrt()/2.0);
     let normalv = Vector::new(0., 0., -1.);
     let light = Light::new(Point::new(0., 0., -10.), Color::new(1., 1.,1.));
     let result = m.lighting(light, position, eyev, normalv, false);
@@ -50,11 +50,12 @@ fn lighting_eye_opposite_surface_light_45ofset() {
 fn lighting_eye_in_path_reflectio_vector() {
     let m = Material::default();
     let position = Point::new(0., 0., 0.);
-    let eyev = Vector::new(0., -2f32.sqrt()/2.0, -2f32.sqrt()/2.0);
+    let eyev = Vector::new(0., -2f64.sqrt()/2.0, -2f64.sqrt()/2.0);
     let normalv = Vector::new(0., 0., -1.);
     let light = Light::new(Point::new(0., 10., -10.), Color::new(1., 1.,1.));
     let result = m.lighting(light, position, eyev, normalv, false);
-    assert_eq!(result, Color::new(1.6363853, 1.6363853, 1.6363853));
+    let c = Color::new(1.6364, 1.6364, 1.6364);
+    assert_eq!(result, c);
 }
 
 #[test]

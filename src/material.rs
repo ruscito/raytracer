@@ -5,26 +5,26 @@ use crate::tuple::*;
 
 /// This struct encapsulates the material surface [color: Color]
 /// and the four attributes from the Phong reflection model:
-/// [ambient: f32] reflection - background light or light reflected from other objects in the environment.
+/// [ambient: f64] reflection - background light or light reflected from other objects in the environment.
 /// This is a constant coloring all points on the surface
-/// [diffuse: f32] reflection - light reflected from a mate surface. It depends only on the angle between
+/// [diffuse: f64] reflection - light reflected from a mate surface. It depends only on the angle between
 /// the light source and the surface normal
-/// [specular: f32] reflection - is the reflection of the light source itself alsso called specular light. 
+/// [specular: f64] reflection - is the reflection of the light source itself alsso called specular light. 
 /// Is the bright spot on a curved surface. It dependes only on the angle between the reflecion vector and
-/// the eye vector and is controlled by a parameter that we'll call [shiness: f32]. The higher the shiness.
+/// the eye vector and is controlled by a parameter that we'll call [shiness: f64]. The higher the shiness.
 /// the smaller and tighter the specular light
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Material {
     pub color: Color,
-    pub ambient: f32,
-    pub diffuse: f32,
-    pub specular: f32,
-    pub shininess: f32,
+    pub ambient: f64,
+    pub diffuse: f64,
+    pub specular: f64,
+    pub shininess: f64,
 }
 
 impl Material {
-    pub fn new(color: Option<Color>, ambient: Option<f32>, 
-        diffuse: Option<f32>, specular: Option<f32>, shininess: Option<f32>) -> Self {
+    pub fn new(color: Option<Color>, ambient: Option<f64>, 
+        diffuse: Option<f64>, specular: Option<f64>, shininess: Option<f64>) -> Self {
         Self {
             color: color.unwrap_or(Color::new(1., 1., 1.)),
             ambient: ambient.unwrap_or(0.1),

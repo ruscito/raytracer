@@ -1,5 +1,5 @@
 
-use std::f32::consts::PI;
+use std::f64::consts::PI;
 
 use raytracer::matrix::mat4::{identity, view_transform};
 use raytracer::matrix::{Mat3, Mat4};
@@ -156,10 +156,7 @@ fn check_is_invertible() {
     assert!(!m.is_invertible())
 }
 
-// ignore this test because float equality/precision
-// but it works 
-// shouldn't compare float though .....
-#[ignore] #[test]
+#[test]
 fn calcualting_inverse() {
     let m = Mat4::from_buffer([
          8.0, -5.0,  9.0,  2.0,
@@ -216,10 +213,10 @@ fn rotation_x() {
     let p = Point::new(0.0, 1.0, 0.0);
     let half_quarter = Mat4::identity().rotate_x(PI/4.0);
     let full_quarter = Mat4::identity().rotate_x(PI/2.0);
-    assert_eq!(half_quarter * p, Point::new(0.0, 2.0f32.sqrt()/2.0, 2.0f32.sqrt()/2.0));
+    assert_eq!(half_quarter * p, Point::new(0.0, 2.0f64.sqrt()/2.0, 2.0f64.sqrt()/2.0));
     assert_eq!(full_quarter * p, Point::new(0.0, 0.0, 1.0));
     // inverse of x rotation rotates in opposite dir
-    assert_eq!(half_quarter.inv() * p, Point::new(0.0, 2.0f32.sqrt()/2.0, -2.0f32.sqrt()/2.0));
+    assert_eq!(half_quarter.inv() * p, Point::new(0.0, 2.0f64.sqrt()/2.0, -2.0f64.sqrt()/2.0));
 }
 
 #[test]
@@ -228,7 +225,7 @@ fn rotation_y() {
     let p = Point::new(0.0, 0.0, 1.0);
     let half_quarter = Mat4::identity().rotate_y(PI/4.0);
     let full_quarter = Mat4::identity().rotate_y(PI/2.0);
-    assert_eq!(half_quarter * p, Point::new(2.0f32.sqrt()/2.0, 0.0, 2.0f32.sqrt()/2.0));
+    assert_eq!(half_quarter * p, Point::new(2.0f64.sqrt()/2.0, 0.0, 2.0f64.sqrt()/2.0));
     assert_eq!(full_quarter * p, Point::new(1.0, 0.0, 0.0));
 }
 
@@ -238,7 +235,7 @@ fn rotation_z() {
     let p = Point::new(0.0, 1.0, 0.0);
     let half_quarter = Mat4::identity().rotate_z(PI/4.0);
     let full_quarter = Mat4::identity().rotate_z(PI/2.0);
-    assert_eq!(half_quarter * p, Point::new(-2.0f32.sqrt()/2.0, 2.0f32.sqrt()/2.0, 0.0));
+    assert_eq!(half_quarter * p, Point::new(-2.0f64.sqrt()/2.0, 2.0f64.sqrt()/2.0, 0.0));
     assert_eq!(full_quarter * p, Point::new(-1.0, 0.0, 0.0));
 }
 

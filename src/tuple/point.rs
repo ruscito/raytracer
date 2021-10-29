@@ -1,31 +1,29 @@
-use std::ops::{Add, Div, Mul, Neg, Sub};
-use crate::{Tuple, f32eq};
 use crate::tuple::Vector;
+use crate::{f64eq, Tuple};
+use std::ops::{Add, Div, Mul, Neg, Sub};
 
 #[derive(Debug, Clone, Copy)]
 pub struct Point {
-    pub x: f32,
-    pub y: f32,
-    pub z: f32,
-    pub w: f32,
+    pub x: f64,
+    pub y: f64,
+    pub z: f64,
+    pub w: f64,
 }
 
-impl Tuple for Point{}
+impl Tuple for Point {}
 
 impl Point {
-    pub fn new(x: f32, y: f32, z: f32) -> Self {
-        Self {x, y, z, w:1.0}
+    pub fn new(x: f64, y: f64, z: f64) -> Self {
+        Self { x, y, z, w: 1.0 }
     }
 
-    pub fn magnitude(&self) -> f32 {
+    pub fn magnitude(&self) -> f64 {
         (self.x.powi(2) + self.y.powi(2) + self.z.powi(2)).sqrt()
     }
 
-    pub fn distance(&self, other:&Point) -> f32 {
-        ((other.x -self.x).powf(2.0) 
-            + (other.y -self.y).powf(2.0)
-            + (other.z -self.z).powf(2.0) 
-        ).sqrt()
+    pub fn distance(&self, other: &Point) -> f64 {
+        ((other.x - self.x).powf(2.0) + (other.y - self.y).powf(2.0) + (other.z - self.z).powf(2.0))
+            .sqrt()
     }
 
     pub fn normalize(&self) -> Self {
@@ -37,19 +35,16 @@ impl Point {
         }
     }
 
-    pub fn mut_normalize(&mut self){
-            let magnitude = self.magnitude();
-            self.x = self.x / magnitude;
-            self.y = self.y / magnitude;
-            self.z = self.z / magnitude;
-            self.w = self.w / magnitude;
+    pub fn mut_normalize(&mut self) {
+        let magnitude = self.magnitude();
+        self.x = self.x / magnitude;
+        self.y = self.y / magnitude;
+        self.z = self.z / magnitude;
+        self.w = self.w / magnitude;
     }
 
-    pub fn dot(&self, other: &Point) -> f32 {
-        self.x * other.x +
-        self.y * other.y +
-        self.z * other.z +
-        self.w * other.w 
+    pub fn dot(&self, other: &Point) -> f64 {
+        self.x * other.x + self.y * other.y + self.z * other.z + self.w * other.w
     }
 
     pub fn cross(&self, other: &Self) -> Point {
@@ -63,15 +58,15 @@ impl Point {
 }
 
 impl PartialEq for Point {
-    fn eq (&self, other: &Point) -> bool {
-        f32eq(self.x, other.x) &&
-        f32eq(self.y, other.y) &&
-        f32eq(self.z, other.z) &&
-        f32eq(self.w, other.w)
+    fn eq(&self, other: &Point) -> bool {
+        f64eq(self.x, other.x)
+            && f64eq(self.y, other.y)
+            && f64eq(self.z, other.z)
+            && f64eq(self.w, other.w)
     }
 }
 
-impl Add <Vector> for Point {
+impl Add<Vector> for Point {
     type Output = Self;
     fn add(self, other: Vector) -> Self {
         Self {
@@ -83,7 +78,7 @@ impl Add <Vector> for Point {
     }
 }
 
-impl Sub <Point> for Point {
+impl Sub<Point> for Point {
     type Output = Vector;
     fn sub(self, other: Self) -> Vector {
         Vector {
@@ -95,8 +90,7 @@ impl Sub <Point> for Point {
     }
 }
 
-
-impl Sub <Vector> for Point {
+impl Sub<Vector> for Point {
     type Output = Point;
     fn sub(self, other: Vector) -> Point {
         Point {
@@ -108,7 +102,7 @@ impl Sub <Vector> for Point {
     }
 }
 
-impl Neg for  Point {
+impl Neg for Point {
     type Output = Self;
     fn neg(self) -> Self {
         Self {
@@ -120,37 +114,37 @@ impl Neg for  Point {
     }
 }
 
-impl Div <f32> for Point {
+impl Div<f64> for Point {
     type Output = Point;
-    fn div(self, rhs: f32) -> Self::Output {
-        Self{
+    fn div(self, rhs: f64) -> Self::Output {
+        Self {
             x: self.x / rhs,
             y: self.y / rhs,
             z: self.z / rhs,
             w: 1.,
-        }        
+        }
     }
 }
 
-impl Mul <f32> for Point {
+impl Mul<f64> for Point {
     type Output = Point;
-    fn mul(self, rhs: f32) -> Self::Output {
-        Self{
+    fn mul(self, rhs: f64) -> Self::Output {
+        Self {
             x: self.x * rhs,
             y: self.y * rhs,
             z: self.z * rhs,
             w: 1.,
-        }        
+        }
     }
 }
 
-impl From <Vector> for Point {
-    fn from(v:Vector) -> Self {
+impl From<Vector> for Point {
+    fn from(v: Vector) -> Self {
         Self {
             x: v.x,
             y: v.y,
             z: v.z,
-            w: 1.0
+            w: 1.0,
         }
     }
 }
