@@ -1,5 +1,6 @@
 use std::ops::Index;
 
+use crate::EPSILON;
 use crate::comps::Comps;
 use crate::ray::Ray;
 use crate::shape::Shape;
@@ -39,7 +40,8 @@ impl Intersection {
             point: point,
             eyev: eyev,
             normalv: normalv,
-            inside: inside
+            inside: inside,
+            over_point: point + normalv * EPSILON,
         }  
     }
 }

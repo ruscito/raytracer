@@ -2,8 +2,9 @@ use raytracer::color::{BLACK, Color, WHITE};
 use raytracer::intersection::Intersection;
 use raytracer::light::Light;
 use raytracer::material::Material;
-use raytracer::matrix::mat4::scale;
+use raytracer::matrix::mat4::{scale, translate};
 use raytracer::ray::Ray;
+use raytracer::shape::{Shape, Sphere};
 use raytracer::world::World;
 use raytracer::tuple::*;
 
@@ -105,4 +106,18 @@ fn shadow_object_behind_point() {
     let w = World::default();
     let p = Point::new(-2., 2., -2.);
     assert!(!w.is_shadowed(p))
+}
+
+#[test]
+fn shade_it() {
+    let light = Light::new(Point::new(0., 0., -10.), WHITE);
+    let t = translate(0., 0., 10.);
+    let s1 = Sphere::new(None, None);
+    let s2 = Sphere::new(Some(t), None);
+    let w = World::new(Some(light), Some(vec![s1.clone_box(), s2.clone_box()]));
+    let r = Ray::new(Point::new(0., 0., 5.), Vector::new(0., 0., 1.));
+    let i = Intersection::new(4.0, s2.clone_box());
+    let comps = i.prepare_computation(r);
+    let c = w.shade_it(comps);
+    assert_eq!(c, Color::new(0.1, 0.1, 0.1));
 }

@@ -1,4 +1,4 @@
-use raytracer::{intersection::{Intersection, Intersections}, ray::Ray, shape::Shape, shape::Sphere, tuple::*};
+use raytracer::{EPSILON, intersection::{Intersection, Intersections}, matrix::mat4::translate, ray::Ray, shape::Shape, shape::Sphere, tuple::*};
 
 #[test]
 fn create_intersection() {
@@ -100,4 +100,14 @@ fn when_intersection_is_inside() {
     assert_eq!(comps.inside, true);
     assert_eq!(comps.point, Point::new(0.0, 0.0, 1.0));
     assert_eq!(comps.normalv, Vector::new(0.0, 0.0, -1.0));
+}
+
+#[test]
+fn hit_should_offset_the_point() {
+    let r = Ray::new(Point::new(0., 0., -5.), Vector::new(0., 0., 1.));
+    let s = Sphere::new(Some(translate(0.0, 0.0, 1.0)), None);
+    let i = Intersection::new(5.0, s.clone_box());
+    let c = i.prepare_computation(r);
+    assert!(c.over_point.z < -EPSILON/2.0);
+    assert!(c.point.z > c.over_point.z);
 }

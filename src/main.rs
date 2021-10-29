@@ -213,6 +213,7 @@ fn ch7() {
         Some(0.0),
         None
     );
+    
     let floor = Sphere::new(Some(t), Some(mtr));
 
     // LEFT WALL
@@ -281,7 +282,7 @@ fn ch7() {
                 left.clone_box()])
     );
     // THE CAMERA
-    let mut camera = Camera::new(2000, 1000, PI/3.0);
+    let mut camera = Camera::new(500, 250, PI/3.0);
     camera.set_transform(view_transform(
         Point::new(0., 1.5, -5.), 
         Point::new(0., 1., 0.),

@@ -39,7 +39,13 @@ impl World {
     /// This function return the color at the intersection encapsulated
     /// by the given [c: Comps] with the world
     pub fn shade_it(&self, c: Comps) -> Color {
-        c.object.material().lighting(self.light.unwrap(), c.point, c.eyev, c.normalv, false)
+        //c.object.material().lighting(self.light.unwrap(), c.point, c.eyev, c.normalv, false)
+        c.object.material().lighting(
+            self.light.unwrap(), 
+            c.point, 
+            c.eyev, 
+            c.normalv, 
+            self.is_shadowed(c.over_point))
     }
 
     /// This function intersect the world with the given ray 
@@ -57,7 +63,7 @@ impl World {
     /// between the point and the light source
     pub fn is_shadowed(&self, p: Point) -> bool {
         // Measure the distance from point to the light source 
-        let v: Vector;
+        let v;
         if let Some(light) = self.light {
             v = light.position - p;
         } else {
@@ -70,18 +76,22 @@ impl World {
         let direction = v.normalize();
 
         // Intersect the world with that ray
-        let intersection = self.intersect(Ray::new(p, direction));
-
+        let r = Ray::new(p, direction);
+        let intersections = self.intersect(r);
+  
         // Check to see if there was a hit, and if so, whether t is less 
         // than distance. If so, the hit lies between the point and the 
         // light source, and the point is in shadow.
-        if let Some(hit) = intersection.hit() {
+        if let Some(hit) = intersections.hit() {
             if hit.t < distance {
                 return true;
             }
         }
         false
+
     }
+
+
 }
 
 impl Default for World {

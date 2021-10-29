@@ -8,4 +8,5 @@ pub struct Comps {
     pub eyev: Vector,
     pub normalv: Vector, 
     pub inside: bool,
+    pub over_point: Point,
 }
