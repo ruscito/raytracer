@@ -35,15 +35,10 @@ impl Sphere {
             material: material.unwrap_or( Material::default()),
         }
     }
-
-
-
-    pub fn transform(&self) -> Mat4 {
-        self.transform
-    }
 }
 
 impl PartialEq for Sphere {
+
     fn eq(&self, other: &Self) -> bool {
         //std::ptr::eq(self, other)
         self.id() == other.id()
@@ -51,8 +46,9 @@ impl PartialEq for Sphere {
 }
 
 impl Shape for Sphere {
+    
     fn intersect(&self, ray: Ray) -> Intersections {
-        //let start = time::Instant::now();
+        // convert the ray from world space to object space
         let ray = ray.transform(&self.inverse_transform);
         let sphere_to_ray = ray.origin - Point::new(0.0, 0.0, 0.0);
         //println!("{} elpased.", start.elapsed().as_micros());
