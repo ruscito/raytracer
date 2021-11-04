@@ -33,6 +33,6 @@ fn set_canvas_background() {
 fn save_canvas() {
     let mut c = Canvas::new(400, 400);
     c.backgound(BLUE);
-    c.save("test.png").unwrap();
+    c.save("./render/test.png").unwrap();
     assert_eq!(c[(0, 0)], BLUE);
 }

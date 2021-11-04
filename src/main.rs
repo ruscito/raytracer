@@ -1,6 +1,7 @@
 use raytracer::camera::Camera;
 use raytracer::canvas::Canvas;
 use raytracer::color::Color;
+use raytracer::color::GREEN;
 use raytracer::color::RED;
 use raytracer::color::WHITE;
 use raytracer::light::Light;
@@ -10,6 +11,7 @@ use raytracer::matrix::mat4::view_transform;
 use raytracer::matrix::mat4::{identity, rotate_z, scale};
 use raytracer::matrix::Mat4;
 use raytracer::ray::Ray;
+use raytracer::shape::Plane;
 use raytracer::shape::Shape;
 use raytracer::shape::Sphere;
 use raytracer::tuple::*;
@@ -34,6 +36,7 @@ fn tick(env: &Environment, proj: Projectile) -> Projectile {
         velocity: proj.velocity + env.gravity + env.wind,
     }
 }
+
 fn projectile() {
     let mut p = Projectile {
         position: Point::new(0.0, 1.0, 0.0),
@@ -52,7 +55,7 @@ fn projectile() {
         cv[(p.position.x as usize, (550 - p.position.y as usize))] = RED;
     }
 
-    cv.save("projectile.png").unwrap();
+    cv.save("./render/projectile.png").unwrap();
 }
 
 fn clock() {
@@ -87,7 +90,7 @@ fn clock() {
         canvas[(position.x as usize, height - position.y as usize)] = RED;
     }
 
-    canvas.save("clock.png").unwrap();
+    canvas.save("./render/clock.png").unwrap();
 }
 
 fn move_a_point() {
@@ -106,7 +109,7 @@ fn move_a_point() {
         cv[(position.x as usize, 200usize - position.y as usize)] = RED;
         position = position + velocity;
     }
-    cv.save("move_a_point.png").unwrap();
+    cv.save("./render/move_a_point.png").unwrap();
 }
 
 fn raycast_2d_sphere() {
@@ -153,7 +156,7 @@ fn raycast_2d_sphere() {
             }
         }
     }
-    canvas.save("2d_red_sphere.png").unwrap();
+    canvas.save("./render/2d_red_sphere.png").unwrap();
 }
 
 fn raycast_3d_sphere() {
@@ -202,7 +205,7 @@ fn raycast_3d_sphere() {
             }
         }
     }
-    canvas.save("3d_red_sphere.png").unwrap();
+    canvas.save("./render/3d_red_sphere.png").unwrap();
 }
 
 fn ch7() {
@@ -279,14 +282,67 @@ fn ch7() {
     ));
     //THE CANVAS
     let canvas = camera.render(world);
-    canvas.save("ch7.png").unwrap();
+    canvas.save("./render/ch7.png").unwrap();
+}
+
+fn ch9() {
+    // FLOOR
+    let mtr = Material::new(Some(GREEN), Some(0.2), None, Some(1.0), Some(1.0));
+    let floor = Box::new(Plane::new(None, Some(mtr)));
+
+    // MIDDLE SPHERE
+    let mut middle = Box::new(Sphere::new(None, None));
+    middle.set_transform(translate(-0.5, 1.0, 0.5));
+    middle.set_material(Material::new(
+        Some(Color::new(0.1, 1.0, 0.5)),
+        None,
+        Some(0.7),
+        Some(0.3),
+        None,
+    ));
+    // RIGHT SPHERE
+    let mut right = Box::new(Sphere::new(None, None));
+    right.set_transform(translate(1.5, 0.5, -0.5).scale(0.5, 0.5, 0.5));
+    right.set_material(Material::new(
+        Some(Color::new(0.5, 1.0, 0.1)),
+        None,
+        Some(0.7),
+        Some(0.3),
+        None,
+    ));
+    // LEFT SPHERE
+    let mut left = Box::new(Sphere::new(None, None));
+    left.set_transform(translate(-1.5, 0.33, -0.75).scale(0.33, 0.33, 0.33));
+    left.set_material(Material::new(
+        Some(Color::new(1.0, 0.8, 0.1)),
+        None,
+        Some(0.7),
+        Some(0.3),
+        None,
+    ));
+    // THE WORLD
+    let world = World::new(
+        Some(Light::new(Point::new(-10., 10.0, -10.0), WHITE)),
+        Some(vec![floor, middle, right, left]),
+    );
+    // THE CAMERA
+    let mut camera = Camera::new(3000, 1500, PI / 3.0);
+    camera.set_transform(view_transform(
+        Point::new(0., 1.5, -5.),
+        Point::new(0., 1., 0.),
+        Vector::new(0., 1., 0.),
+    ));
+    //THE CANVAS
+    let canvas = camera.render(world);
+    canvas.save("./render/ch9.png").unwrap();
 }
 
 fn main() {
-    move_a_point();
-    projectile();
-    clock();
-    raycast_2d_sphere();
-    raycast_3d_sphere();
-    ch7();
+    //move_a_point();
+    //projectile();
+    //clock();
+    //raycast_2d_sphere();
+    //raycast_3d_sphere();
+    //ch7();
+    //ch9();
 }

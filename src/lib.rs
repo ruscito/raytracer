@@ -25,8 +25,10 @@ pub mod matrix {
 pub mod shape {
     pub use shape::Shape;
     pub use sphere::Sphere;
+    pub use plane::Plane;
     pub mod shape;
     pub mod sphere;
+    pub mod plane;
 }
 
 pub mod camera;
